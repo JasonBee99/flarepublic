@@ -62,63 +62,73 @@ export default async function HomePage() {
         />
 
         <div className="container relative mx-auto max-w-5xl px-4 py-14 sm:py-18">
-        {/* Decorative Florida map — centered, ghost overlay */}
-        <div className="pointer-events-none absolute inset-0 hidden items-center justify-center lg:flex">
-          <Image
-            src="/favicon-icon.png"
-            alt=""
-            width={480}
-            height={480}
-            className="select-none opacity-[0.09]"
-            aria-hidden
-          />
-        </div>
-          <div className="mb-6 flex items-center gap-3">
-            <div className="h-px w-10 bg-[#CC4A1B]" />
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#e5a85a]">
-              Florida Republic
-            </span>
-            <div className="h-px w-40 bg-[#CC4A1B]" />
-          </div>
+          {/* Two-column layout: text left, icon right */}
+          <div className="flex items-center gap-8 lg:gap-16">
 
-          <h1 className="mb-6 max-w-3xl text-5xl font-bold leading-[1.1] tracking-tight sm:text-6xl lg:text-7xl">
-            Restoring{' '}
-            <span className="italic text-[#e5824a]">Self-Governance</span>
-            <br className="hidden sm:block" /> in Florida
-          </h1>
-
-          <p className="mb-10 max-w-xl text-lg leading-relaxed text-white/70">
-            The Florida Republic is the lawful, de jure government of the people — operating
-            under the original organic laws of America. County assemblies. Real authority.
-            No permission required.
-          </p>
-
-          <div className="flex flex-wrap items-center gap-4">
-            <Link
-              href="/register"
-              className="inline-flex items-center gap-2 rounded-md bg-[#CC4A1B] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#e05520]"
-            >
-              Join the Republic <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link
-              href="/learn/newbys-corner"
-              className="inline-flex items-center gap-2 rounded-md border border-white/20 px-6 py-3 text-sm font-semibold text-white/90 transition hover:border-white/50 hover:text-white"
-            >
-              Learn More <ChevronRight className="h-4 w-4" />
-            </Link>
-          </div>
-
-          <div className="mt-16 flex flex-wrap gap-x-10 gap-y-4 border-t border-white/10 pt-10">
-            {[
-              { label: 'Counties Active', value: '2' },
-              { label: 'Members', value: 'Growing' },
-              { label: 'Founded', value: '2020' },
-            ].map((s) => (
-              <div key={s.label}>
-                <p className="text-2xl font-bold text-[#e5824a]">{s.value}</p>
-                <p className="text-xs uppercase tracking-widest text-white/50">{s.label}</p>
+            {/* Column A — text */}
+            <div className="flex-1 min-w-0">
+              <div className="mb-6 flex items-center gap-3">
+                <div className="h-px w-10 bg-[#CC4A1B]" />
+                <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#e5a85a]">
+                  Florida Republic
+                </span>
+                <div className="h-px w-40 bg-[#CC4A1B]" />
               </div>
-            ))}
+
+              <h1 className="mb-6 text-5xl font-bold leading-[1.1] tracking-tight sm:text-6xl lg:text-7xl">
+                Restoring{' '}
+                <span className="italic text-[#e5824a]">Self-Governance</span>
+                <br className="hidden sm:block" /> in Florida
+              </h1>
+
+              <p className="mb-10 max-w-xl text-lg leading-relaxed text-white/70">
+                The Florida Republic is the lawful, de jure government of the people — operating
+                under the original organic laws of America. County assemblies. Real authority.
+                No permission required.
+              </p>
+
+              <div className="flex flex-wrap items-center gap-4">
+                <Link
+                  href="/register"
+                  className="inline-flex items-center gap-2 rounded-md bg-[#CC4A1B] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#e05520]"
+                >
+                  Join the Republic <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link
+                  href="/learn/newbys-corner"
+                  className="inline-flex items-center gap-2 rounded-md border border-white/20 px-6 py-3 text-sm font-semibold text-white/90 transition hover:border-white/50 hover:text-white"
+                >
+                  Learn More <ChevronRight className="h-4 w-4" />
+                </Link>
+              </div>
+
+              <div className="mt-16 flex flex-wrap gap-x-10 gap-y-4 border-t border-white/10 pt-10">
+                {[
+                  { label: 'Counties Active', value: '2' },
+                  { label: 'Members', value: 'Growing' },
+                  { label: 'Founded', value: '2020' },
+                ].map((s) => (
+                  <div key={s.label}>
+                    <p className="text-2xl font-bold text-[#e5824a]">{s.value}</p>
+                    <p className="text-xs uppercase tracking-widest text-white/50">{s.label}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Column B — Florida icon, centered, screen blend removes white bg */}
+            <div className="hidden shrink-0 items-center justify-center lg:flex" style={{width: '340px'}}>
+              <Image
+                src="/favicon-icon.png"
+                alt="Florida Republic seal"
+                width={320}
+                height={320}
+                className="select-none"
+                style={{ mixBlendMode: 'screen', opacity: 0.85 }}
+                aria-hidden
+              />
+            </div>
+
           </div>
         </div>
       </section>
