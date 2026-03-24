@@ -58,7 +58,7 @@ export async function Header() {
             alt="FlaRepublic — Florida Free State Restored Republic"
             width={260}
             height={60}
-            className="h-10 w-auto object-contain"
+            className="h-14 w-auto object-contain"
             priority
           />
         </Link>
