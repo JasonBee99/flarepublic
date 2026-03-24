@@ -61,15 +61,15 @@ export default async function HomePage() {
           }}
         />
 
-        <div className="container relative mx-auto max-w-5xl px-4 py-28 sm:py-36">
-        {/* Decorative Florida map — right side, fades out */}
-        <div className="pointer-events-none absolute right-0 top-1/2 hidden -translate-y-1/2 opacity-[0.12] lg:block" style={{right: '-2rem'}}>
+        <div className="container relative mx-auto max-w-5xl px-4 py-14 sm:py-18">
+        {/* Decorative Florida map — centered, ghost overlay */}
+        <div className="pointer-events-none absolute inset-0 hidden items-center justify-center lg:flex">
           <Image
             src="/favicon-icon.png"
             alt=""
-            width={420}
-            height={420}
-            className="select-none"
+            width={480}
+            height={480}
+            className="select-none opacity-[0.09]"
             aria-hidden
           />
         </div>
@@ -78,6 +78,7 @@ export default async function HomePage() {
             <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#e5a85a]">
               Florida Republic
             </span>
+            <div className="h-px w-40 bg-[#CC4A1B]" />
           </div>
 
           <h1 className="mb-6 max-w-3xl text-5xl font-bold leading-[1.1] tracking-tight sm:text-6xl lg:text-7xl">
