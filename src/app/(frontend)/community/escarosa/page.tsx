@@ -2,6 +2,7 @@
 // EscaRosa Chapter — Escambia & Santa Rosa County local chapter page.
 
 import type { Metadata } from 'next'
+import React from 'react'
 import Link from 'next/link'
 import { Users, FileText, Calendar, ChevronRight } from 'lucide-react'
 

@@ -5,6 +5,7 @@
 import type { Metadata } from 'next'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
+import React from 'react'
 import Link from 'next/link'
 import { FileText, Table, ExternalLink, Download } from 'lucide-react'
 
