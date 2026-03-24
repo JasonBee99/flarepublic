@@ -3,6 +3,9 @@ import type { GlobalConfig } from 'payload'
 export const MainNav: GlobalConfig = {
   slug: 'main-nav',
   label: 'Main Navigation',
+  access: {
+    read: () => true,
+  },
   admin: {
     description: 'Manage the site header navigation. Add, reorder, or toggle nav items and dropdown groups.',
   },
