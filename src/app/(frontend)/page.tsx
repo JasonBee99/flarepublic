@@ -8,6 +8,7 @@ import { getPayload } from 'payload'
 import Link from 'next/link'
 import React from 'react'
 import { ChevronRight, ArrowRight } from 'lucide-react'
+import Image from 'next/image'
 
 export const metadata: Metadata = {
   title: 'FlaRepublic — Florida Self-Governance',
@@ -43,12 +44,12 @@ export default async function HomePage() {
     <div className="flex flex-col">
 
       {/* HERO */}
-      <section className="relative overflow-hidden bg-[#0d1117] text-white">
+      <section className="relative overflow-hidden bg-[#111418] text-white">
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.04]"
           style={{
             backgroundImage:
-              'linear-gradient(#e5c87a 1px, transparent 1px), linear-gradient(90deg, #e5c87a 1px, transparent 1px)',
+              'linear-gradient(#CC4A1B 1px, transparent 1px), linear-gradient(90deg, #CC4A1B 1px, transparent 1px)',
             backgroundSize: '60px 60px',
           }}
         />
@@ -56,21 +57,32 @@ export default async function HomePage() {
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(229,200,122,0.08) 0%, transparent 70%)',
+              'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(204,74,27,0.12) 0%, transparent 70%)',
           }}
         />
 
         <div className="container relative mx-auto max-w-5xl px-4 py-28 sm:py-36">
+        {/* Decorative Florida map — right side, fades out */}
+        <div className="pointer-events-none absolute right-0 top-1/2 hidden -translate-y-1/2 opacity-[0.12] lg:block" style={{right: '-2rem'}}>
+          <Image
+            src="/favicon-icon.png"
+            alt=""
+            width={420}
+            height={420}
+            className="select-none"
+            aria-hidden
+          />
+        </div>
           <div className="mb-6 flex items-center gap-3">
-            <div className="h-px w-10 bg-[#e5c87a]" />
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#e5c87a]">
+            <div className="h-px w-10 bg-[#CC4A1B]" />
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#e5a85a]">
               Florida Republic
             </span>
           </div>
 
           <h1 className="mb-6 max-w-3xl text-5xl font-bold leading-[1.1] tracking-tight sm:text-6xl lg:text-7xl">
             Restoring{' '}
-            <span className="italic text-[#e5c87a]">Self-Governance</span>
+            <span className="italic text-[#e5824a]">Self-Governance</span>
             <br className="hidden sm:block" /> in Florida
           </h1>
 
@@ -83,7 +95,7 @@ export default async function HomePage() {
           <div className="flex flex-wrap items-center gap-4">
             <Link
               href="/register"
-              className="inline-flex items-center gap-2 rounded-md bg-[#e5c87a] px-6 py-3 text-sm font-bold text-[#0d1117] transition hover:bg-[#f0d88a]"
+              className="inline-flex items-center gap-2 rounded-md bg-[#CC4A1B] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#e05520]"
             >
               Join the Republic <ArrowRight className="h-4 w-4" />
             </Link>
@@ -102,7 +114,7 @@ export default async function HomePage() {
               { label: 'Founded', value: '2020' },
             ].map((s) => (
               <div key={s.label}>
-                <p className="text-2xl font-bold text-[#e5c87a]">{s.value}</p>
+                <p className="text-2xl font-bold text-[#e5824a]">{s.value}</p>
                 <p className="text-xs uppercase tracking-widest text-white/50">{s.label}</p>
               </div>
             ))}

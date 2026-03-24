@@ -5,6 +5,7 @@
 
 import React from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { cookies } from 'next/headers'
 import { fetchMainNav } from './fetchNav'
 import { Nav } from './Nav/index'
@@ -52,10 +53,14 @@ export async function Header() {
           href="/"
           className="flex items-center gap-2 text-foreground hover:text-primary transition-colors"
         >
-          {/* Replace with <Image> once you have a logo asset */}
-          <span className="text-lg font-bold tracking-tight">
-            Fla<span className="text-primary">Republic</span>
-          </span>
+          <Image
+            src="/logo.png"
+            alt="FlaRepublic — Florida Free State Restored Republic"
+            width={260}
+            height={60}
+            className="h-10 w-auto object-contain"
+            priority
+          />
         </Link>
 
         {/* Desktop nav */}
