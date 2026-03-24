@@ -1,13 +1,12 @@
 'use client'
 // src/app/(frontend)/login/LoginForm.tsx
-// Submits credentials to Payload /api/users/login.
-// Payload sets an HttpOnly payload-token cookie on success.
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
-export function LoginForm() {
+// Inner component that uses useSearchParams — must be wrapped in Suspense
+function LoginFormInner() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [error, setError] = useState('')
@@ -26,7 +25,7 @@ export function LoginForm() {
       const res = await fetch('/api/users/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include', // important: lets Payload set HttpOnly cookie
+        credentials: 'include',
         body: JSON.stringify({ email: data.email, password: data.password }),
       })
 
@@ -37,10 +36,9 @@ export function LoginForm() {
         return
       }
 
-      // Redirect to member dashboard or wherever they came from
       const redirectTo = searchParams.get('redirect') ?? '/member'
       router.push(redirectTo)
-      router.refresh() // re-run server components so Header picks up new session
+      router.refresh()
     } catch {
       setError('Network error. Please check your connection and try again.')
     } finally {
@@ -60,7 +58,6 @@ export function LoginForm() {
         </div>
       )}
 
-      {/* Email */}
       <div>
         <label htmlFor="email" className="mb-1.5 block text-sm font-medium">
           Email address
@@ -76,7 +73,6 @@ export function LoginForm() {
         />
       </div>
 
-      {/* Password */}
       <div>
         <label htmlFor="password" className="mb-1.5 block text-sm font-medium">
           Password
@@ -91,20 +87,18 @@ export function LoginForm() {
         />
       </div>
 
-      {/* Error */}
       {error && (
         <p className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
           {error}
         </p>
       )}
 
-      {/* Submit */}
       <button
         type="submit"
         disabled={loading}
         className="w-full rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition hover:bg-primary/90 disabled:opacity-60"
       >
-        {loading ? 'Signing in…' : 'Sign in'}
+        {loading ? 'Signing in\u2026' : 'Sign in'}
       </button>
 
       <p className="text-center text-sm text-muted-foreground">
@@ -114,5 +108,21 @@ export function LoginForm() {
         </Link>
       </p>
     </form>
+  )
+}
+
+// Public export wraps the inner component in Suspense (required by Next.js
+// App Router whenever useSearchParams is used in a client component)
+export function LoginForm() {
+  return (
+    <Suspense fallback={
+      <div className="space-y-5 rounded-lg border border-border bg-card p-8 shadow-sm animate-pulse">
+        <div className="h-10 rounded-md bg-muted" />
+        <div className="h-10 rounded-md bg-muted" />
+        <div className="h-10 rounded-md bg-muted" />
+      </div>
+    }>
+      <LoginFormInner />
+    </Suspense>
   )
 }
