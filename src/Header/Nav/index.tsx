@@ -9,7 +9,7 @@ import { cn } from '@/utilities/cn'
 
 interface NavProps {
   groups: NavGroup[]
-  user?: { approved?: boolean } | null
+  user?: { name?: string; approved?: boolean } | null
 }
 
 function isVisible(
