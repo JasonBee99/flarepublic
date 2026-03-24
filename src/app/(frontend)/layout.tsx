@@ -48,6 +48,11 @@ export const metadata: Metadata = {
   openGraph: mergeOpenGraph(),
   twitter: {
     card: 'summary_large_image',
-    creator: '@payloadcms',
   },
+  title: {
+    default: 'FlaRepublic — Florida Self-Governance',
+    template: '%s | FlaRepublic',
+  },
+  description:
+    'The Florida Republic — lawful self-governance for Florida nationals. County assemblies, member resources, and community.',
 }
