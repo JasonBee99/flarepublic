@@ -15,6 +15,9 @@ import { FileTypes } from './collections/FileTypes'
 import { Contacts } from './collections/Contacts'
 import { Counties } from './collections/Counties'
 import { Roles } from './collections/Roles'
+import { ForumCategories } from './collections/ForumCategories'
+import { ForumThreads } from './collections/ForumThreads'
+import { ForumReplies } from './collections/ForumReplies'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
 import { MainNav } from './globals/MainNav'
@@ -67,7 +70,7 @@ export default buildConfig({
   db: mongooseAdapter({
     url: process.env.DATABASE_URL || '',
   }),
-  collections: [Pages, Posts, Media, Categories, Users, Documents, DocumentCategories, FileTypes, Contacts, Counties, Roles],
+  collections: [Pages, Posts, Media, Categories, Users, Documents, DocumentCategories, FileTypes, Contacts, Counties, Roles, ForumCategories, ForumThreads, ForumReplies],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer, MainNav],
   plugins,
