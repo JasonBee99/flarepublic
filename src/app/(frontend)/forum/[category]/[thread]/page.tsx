@@ -10,6 +10,7 @@ import Link from 'next/link'
 import { ForumReplyForm } from './ForumReplyForm'
 import { ModActions } from './ModActions'
 import { Pagination } from '@/components/Pagination'
+import { ForumRichText } from '@/components/ForumRichText'
 
 const REPLIES_PER_PAGE = 25
 
@@ -59,21 +60,6 @@ function timeAgo(dateStr: string) {
   const days = Math.floor(hrs / 24)
   if (days < 30) return `${days}d ago`
   return new Date(dateStr).toLocaleDateString()
-}
-
-function renderRichText(body: unknown): string {
-  if (!body) return ''
-  if (typeof body === 'string') return body
-  try {
-    const root = (body as { root?: { children?: Array<{ children?: Array<{ text?: string }> }> } }).root
-    if (!root?.children) return ''
-    return root.children
-      .map((node) => node.children?.map((child) => child.text ?? '').join('') ?? '')
-      .filter(Boolean)
-      .join('\n\n')
-  } catch {
-    return ''
-  }
 }
 
 export default async function ThreadPage({ params, searchParams }: Props) {
@@ -148,7 +134,6 @@ export default async function ThreadPage({ params, searchParams }: Props) {
       ? ((thread.author as { name?: string }).name ?? 'Member')
       : 'Member'
 
-  const bodyText = renderRichText(thread.body)
   const threadPath = `/forum/${category}/${threadId}`
 
   return (
@@ -192,9 +177,7 @@ export default async function ThreadPage({ params, searchParams }: Props) {
           )}
         </p>
 
-        <div className="prose prose-sm max-w-none dark:prose-invert whitespace-pre-wrap text-foreground">
-          {bodyText}
-        </div>
+        <ForumRichText body={thread.body} />
 
         {(isModerator || isAuthor) && (
           <ModActions
@@ -227,7 +210,6 @@ export default async function ThreadPage({ params, searchParams }: Props) {
               typeof reply.author === 'object'
                 ? ((reply.author as { name?: string }).name ?? 'Member')
                 : 'Member'
-            const replyText = renderRichText(reply.body)
 
             return (
               <div
@@ -238,9 +220,7 @@ export default async function ThreadPage({ params, searchParams }: Props) {
                   <strong className="text-foreground">{replyAuthor}</strong> &middot;{' '}
                   {timeAgo((reply.createdAt as string) ?? '')}
                 </p>
-                <div className="prose prose-sm max-w-none dark:prose-invert whitespace-pre-wrap text-foreground">
-                  {replyText}
-                </div>
+                <ForumRichText body={reply.body} />
               </div>
             )
           })}
