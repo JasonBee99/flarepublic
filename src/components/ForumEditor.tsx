@@ -47,6 +47,7 @@ function ToolbarButton({ onClick, active, disabled, title, children }: ToolbarBu
 
 export function ForumEditor({ value, onChange, placeholder = 'Write here…', minHeight = '160px' }: Props) {
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: [
       StarterKit.configure({
         heading: { levels: [2, 3] },
