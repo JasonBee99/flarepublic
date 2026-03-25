@@ -1,6 +1,5 @@
 // src/app/(frontend)/forum/[category]/[thread]/page.tsx
-// Thread detail — shows the OP body and reply chain.
-// Reply submission is handled client-side via ForumReplyForm.
+// Thread detail — paginated replies, 25 per page.
 
 import type { Metadata } from 'next'
 import configPromise from '@payload-config'
@@ -10,8 +9,14 @@ import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ForumReplyForm } from './ForumReplyForm'
 import { ModActions } from './ModActions'
+import { Pagination } from '@/components/Pagination'
 
-type Props = { params: Promise<{ category: string; thread: string }> }
+const REPLIES_PER_PAGE = 25
+
+type Props = {
+  params: Promise<{ category: string; thread: string }>
+  searchParams: Promise<{ page?: string }>
+}
 
 async function getCurrentUser() {
   const cookieStore = await cookies()
@@ -56,19 +61,14 @@ function timeAgo(dateStr: string) {
   return new Date(dateStr).toLocaleDateString()
 }
 
-// Render Payload rich text (Lexical) as plain paragraphs server-side.
-// For production you'd use @payloadcms/richtext-lexical RichText component.
 function renderRichText(body: unknown): string {
   if (!body) return ''
   if (typeof body === 'string') return body
   try {
-    // Lexical root node
     const root = (body as { root?: { children?: Array<{ children?: Array<{ text?: string }> }> } }).root
     if (!root?.children) return ''
     return root.children
-      .map((node) =>
-        node.children?.map((child) => child.text ?? '').join('') ?? '',
-      )
+      .map((node) => node.children?.map((child) => child.text ?? '').join('') ?? '')
       .filter(Boolean)
       .join('\n\n')
   } catch {
@@ -76,15 +76,17 @@ function renderRichText(body: unknown): string {
   }
 }
 
-export default async function ThreadPage({ params }: Props) {
+export default async function ThreadPage({ params, searchParams }: Props) {
   const { category, thread: threadId } = await params
+  const { page: pageParam } = await searchParams
+  const currentPage = Math.max(1, parseInt(pageParam ?? '1', 10))
+
   const user = await getCurrentUser()
   if (!user) redirect(`/login?redirect=/forum/${category}/${threadId}`)
   if (!user.approved) redirect('/member')
 
   const payload = await getPayload({ config: configPromise })
 
-  // Load thread
   const threadResult = await payload.find({
     collection: 'forum-threads',
     where: {
@@ -100,7 +102,6 @@ export default async function ThreadPage({ params }: Props) {
   const thread = threadResult.docs[0]
   if (!thread) notFound()
 
-  // Load category for breadcrumb + mod check
   const catResult = await payload.find({
     collection: 'forum-categories',
     where: { slug: { equals: category } },
@@ -117,24 +118,30 @@ export default async function ThreadPage({ params }: Props) {
       )
     : []
   const isModerator = user.roles?.includes('admin') || moderatorIds.includes(user.id)
-  const isAuthor = (typeof thread.author === 'object'
-    ? (thread.author as { id?: string }).id
-    : thread.author) === user.id
+  const isAuthor =
+    (typeof thread.author === 'object'
+      ? (thread.author as { id?: string }).id
+      : thread.author) === user.id
 
-  // Load replies (approved only)
+  // Paginated replies
   const replyResult = await payload.find({
     collection: 'forum-replies',
     where: {
       and: [
         { thread: { equals: thread.id } },
         { status: { equals: 'approved' } },
+        { parentReply: { exists: false } },
       ],
     },
     sort: 'createdAt',
-    limit: 200,
+    limit: REPLIES_PER_PAGE,
+    page: currentPage,
     depth: 2,
     overrideAccess: true,
   })
+
+  const totalPages = replyResult.totalPages ?? 1
+  const totalReplies = replyResult.totalDocs ?? 0
 
   const authorName =
     typeof thread.author === 'object'
@@ -142,14 +149,13 @@ export default async function ThreadPage({ params }: Props) {
       : 'Member'
 
   const bodyText = renderRichText(thread.body)
+  const threadPath = `/forum/${category}/${threadId}`
 
   return (
     <main className="container mx-auto max-w-3xl px-4 py-12">
       {/* Breadcrumb */}
       <nav className="mb-6 text-sm text-muted-foreground">
-        <Link href="/forum" className="hover:text-foreground">
-          Forum
-        </Link>
+        <Link href="/forum" className="hover:text-foreground">Forum</Link>
         <span className="mx-2">/</span>
         <Link href={`/forum/${category}`} className="hover:text-foreground">
           {cat.title as string}
@@ -181,6 +187,9 @@ export default async function ThreadPage({ params }: Props) {
         <p className="mb-4 text-sm text-muted-foreground">
           by <strong className="text-foreground">{authorName}</strong> &middot;{' '}
           {timeAgo((thread.createdAt as string) ?? '')}
+          {totalReplies > 0 && (
+            <> &middot; {totalReplies} {totalReplies === 1 ? 'reply' : 'replies'}</>
+          )}
         </p>
 
         <div className="prose prose-sm max-w-none dark:prose-invert whitespace-pre-wrap text-foreground">
@@ -201,22 +210,29 @@ export default async function ThreadPage({ params }: Props) {
 
       {/* Replies */}
       {replyResult.docs.length > 0 && (
-        <div className="mb-8 space-y-4">
-          <h2 className="text-lg font-semibold">
-            {replyResult.docs.length} {replyResult.docs.length === 1 ? 'Reply' : 'Replies'}
-          </h2>
+        <div className="mb-6 space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold">
+              {totalReplies} {totalReplies === 1 ? 'Reply' : 'Replies'}
+            </h2>
+            {totalPages > 1 && (
+              <p className="text-sm text-muted-foreground">
+                Page {currentPage} of {totalPages}
+              </p>
+            )}
+          </div>
+
           {replyResult.docs.map((reply) => {
             const replyAuthor =
               typeof reply.author === 'object'
                 ? ((reply.author as { name?: string }).name ?? 'Member')
                 : 'Member'
             const replyText = renderRichText(reply.body)
-            const isNestedReply = !!reply.parentReply
 
             return (
               <div
                 key={reply.id as string}
-                className={`rounded-lg border border-border p-5 ${isNestedReply ? 'ml-8 border-l-2 border-l-primary/30' : ''}`}
+                className="rounded-lg border border-border p-5"
               >
                 <p className="mb-3 text-sm text-muted-foreground">
                   <strong className="text-foreground">{replyAuthor}</strong> &middot;{' '}
@@ -228,20 +244,32 @@ export default async function ThreadPage({ params }: Props) {
               </div>
             )
           })}
+
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            basePath={threadPath}
+          />
         </div>
       )}
 
-      {/* Reply form */}
+      {/* Reply form — only on last page */}
       {thread.locked ? (
         <div className="rounded-lg border border-border bg-muted/30 p-5 text-center text-sm text-muted-foreground">
           🔒 This thread is locked. No new replies can be posted.
         </div>
-      ) : (
+      ) : currentPage === totalPages ? (
         <ForumReplyForm
           threadId={thread.id as string}
           userId={user.id}
           categorySlug={category}
         />
+      ) : (
+        <div className="rounded-lg border border-border bg-muted/30 p-5 text-center text-sm text-muted-foreground">
+          <Link href={`${threadPath}?page=${totalPages}`} className="text-primary hover:underline">
+            Go to last page to post a reply →
+          </Link>
+        </div>
       )}
     </main>
   )
