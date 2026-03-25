@@ -44,9 +44,9 @@ export default async function ForumPage() {
   const catResult = await payload.find({
     collection: 'forum-categories',
     where: { isActive: { equals: true } },
-    sort: 'displayOrder',
+    sort: 'title',
     limit: 100,
-    depth: 1,
+    depth: 0,
     overrideAccess: true,
   })
 
@@ -91,10 +91,6 @@ export default async function ForumPage() {
         <div className="divide-y divide-border rounded-lg border border-border">
           {catResult.docs.map((cat) => {
             const slug = cat.slug as string
-            const countyName =
-              cat.county && typeof cat.county === 'object'
-                ? (cat.county as { name?: string }).name
-                : null
 
             return (
               <Link
@@ -108,11 +104,6 @@ export default async function ForumPage() {
                     <p className="mt-0.5 text-sm text-muted-foreground">
                       {cat.description as string}
                     </p>
-                  )}
-                  {countyName && (
-                    <span className="mt-1 inline-block rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
-                      {countyName}
-                    </span>
                   )}
                 </div>
                 <div className="ml-6 shrink-0 text-right">
