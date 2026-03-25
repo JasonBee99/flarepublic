@@ -21,7 +21,8 @@
     "test": "pnpm run test:int && pnpm run test:e2e",
     "test:e2e": "cross-env NODE_OPTIONS=\"--no-deprecation --import=tsx/esm\" playwright test --config=playwright.config.ts",
     "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts",
-    "seed:documents": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/seed-documents.ts"
+    "seed:documents": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/seed-documents.ts",
+    "seed:forum": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/seed-forum.ts"
   },
   "dependencies": {
     "@payloadcms/admin-bar": "3.80.0",
