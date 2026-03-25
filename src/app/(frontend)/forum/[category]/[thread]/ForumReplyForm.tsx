@@ -1,9 +1,10 @@
 'use client'
 // src/app/(frontend)/forum/[category]/[thread]/ForumReplyForm.tsx
-// Client component — handles reply submission via Payload REST API.
+// Reply form using Tiptap rich text editor.
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { ForumEditor } from '@/components/ForumEditor'
 
 type Props = {
   threadId: string
@@ -17,9 +18,11 @@ export function ForumReplyForm({ threadId, userId, categorySlug }: Props) {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  const isEmpty = !body || body === '<p></p>' || body.trim() === ''
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!body.trim()) return
+    if (isEmpty) return
     setSubmitting(true)
     setError(null)
 
@@ -32,20 +35,8 @@ export function ForumReplyForm({ threadId, userId, categorySlug }: Props) {
           thread: threadId,
           author: userId,
           status: 'approved',
-          body: {
-            root: {
-              type: 'root',
-              children: body.trim().split('\n\n').map((para) => ({
-                type: 'paragraph',
-                version: 1,
-                children: [{ type: 'text', text: para, version: 1 }],
-              })),
-              direction: 'ltr',
-              format: '',
-              indent: 0,
-              version: 1,
-            },
-          },
+          // Store HTML directly in body as a string — ForumRichText handles both
+          body: body,
         }),
       })
 
@@ -73,19 +64,17 @@ export function ForumReplyForm({ threadId, userId, categorySlug }: Props) {
         </div>
       )}
 
-      <textarea
+      <ForumEditor
         value={body}
-        onChange={(e) => setBody(e.target.value)}
+        onChange={setBody}
         placeholder="Write your reply here…"
-        rows={5}
-        required
-        className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+        minHeight="140px"
       />
 
       <div className="mt-3 flex justify-end">
         <button
           type="submit"
-          disabled={submitting || !body.trim()}
+          disabled={submitting || isEmpty}
           className="rounded-md bg-primary px-5 py-2 text-sm font-semibold text-white transition hover:bg-primary/90 disabled:opacity-50"
         >
           {submitting ? 'Posting…' : 'Post Reply'}

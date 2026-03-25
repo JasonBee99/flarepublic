@@ -1,10 +1,11 @@
 'use client'
 // src/app/(frontend)/forum/new/NewThreadForm.tsx
-// Client form — submits new thread via Payload REST API, then redirects.
+// New thread form using Tiptap rich text editor.
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { ForumEditor } from '@/components/ForumEditor'
 
 type Category = { id: string; title: string; slug: string }
 
@@ -25,9 +26,11 @@ export function NewThreadForm({ categories, defaultCategorySlug, userId }: Props
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  const isEmpty = !body || body === '<p></p>' || body.trim() === ''
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!title.trim() || !body.trim() || !categoryId) return
+    if (!title.trim() || isEmpty || !categoryId) return
     setSubmitting(true)
     setError(null)
 
@@ -43,20 +46,7 @@ export function NewThreadForm({ categories, defaultCategorySlug, userId }: Props
           status: 'approved',
           pinned: false,
           locked: false,
-          body: {
-            root: {
-              type: 'root',
-              children: body.trim().split('\n\n').map((para) => ({
-                type: 'paragraph',
-                version: 1,
-                children: [{ type: 'text', text: para, version: 1 }],
-              })),
-              direction: 'ltr',
-              format: '',
-              indent: 0,
-              version: 1,
-            },
-          },
+          body: body,
         }),
       })
 
@@ -98,13 +88,9 @@ export function NewThreadForm({ categories, defaultCategorySlug, userId }: Props
           required
           className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
         >
-          <option value="" disabled>
-            Select a forum…
-          </option>
+          <option value="" disabled>Select a forum…</option>
           {categories.map((cat) => (
-            <option key={cat.id} value={cat.id}>
-              {cat.title}
-            </option>
+            <option key={cat.id} value={cat.id}>{cat.title}</option>
           ))}
         </select>
       </div>
@@ -128,21 +114,15 @@ export function NewThreadForm({ categories, defaultCategorySlug, userId }: Props
 
       {/* Body */}
       <div>
-        <label htmlFor="body" className="mb-1.5 block text-sm font-medium">
+        <label className="mb-1.5 block text-sm font-medium">
           Message <span className="text-red-500">*</span>
         </label>
-        <textarea
-          id="body"
+        <ForumEditor
           value={body}
-          onChange={(e) => setBody(e.target.value)}
-          placeholder="Write your post here. Separate paragraphs with a blank line."
-          rows={10}
-          required
-          className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+          onChange={setBody}
+          placeholder="Write your post here…"
+          minHeight="220px"
         />
-        <p className="mt-1 text-xs text-muted-foreground">
-          Separate paragraphs with a blank line for clean formatting.
-        </p>
       </div>
 
       {/* Actions */}
@@ -152,7 +132,7 @@ export function NewThreadForm({ categories, defaultCategorySlug, userId }: Props
         </Link>
         <button
           type="submit"
-          disabled={submitting || !title.trim() || !body.trim() || !categoryId}
+          disabled={submitting || !title.trim() || isEmpty || !categoryId}
           className="rounded-md bg-primary px-6 py-2 text-sm font-semibold text-white transition hover:bg-primary/90 disabled:opacity-50"
         >
           {submitting ? 'Posting…' : 'Post Thread'}

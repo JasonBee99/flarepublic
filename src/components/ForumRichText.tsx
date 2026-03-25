@@ -1,8 +1,5 @@
 // src/components/ForumRichText.tsx
-// Thin wrapper around the site's RichText component tuned for forum posts.
-// - No gutter / container class (forum has its own padding)
-// - prose-sm for compact forum text
-// - Handles both Lexical JSON (from Payload) and plain strings gracefully
+// Renders forum post bodies — handles both Payload Lexical JSON and Tiptap HTML strings.
 
 import RichText from '@/components/RichText'
 import type { DefaultTypedEditorState } from '@payloadcms/richtext-lexical'
@@ -13,15 +10,15 @@ type Props = {
 }
 
 function isLexicalState(val: unknown): val is DefaultTypedEditorState {
-  return (
-    typeof val === 'object' &&
-    val !== null &&
-    'root' in val
-  )
+  return typeof val === 'object' && val !== null && 'root' in val
+}
+
+function isHtmlString(val: unknown): val is string {
+  return typeof val === 'string' && val.trimStart().startsWith('<')
 }
 
 export function ForumRichText({ body, className }: Props) {
-  // Proper Lexical JSON — use the full RichText renderer
+  // Payload Lexical JSON
   if (isLexicalState(body)) {
     return (
       <RichText
@@ -33,7 +30,17 @@ export function ForumRichText({ body, className }: Props) {
     )
   }
 
-  // Plain string fallback (e.g. legacy data or direct string)
+  // Tiptap HTML string
+  if (isHtmlString(body)) {
+    return (
+      <div
+        className={`prose prose-sm max-w-none dark:prose-invert ${className ?? ''}`}
+        dangerouslySetInnerHTML={{ __html: body }}
+      />
+    )
+  }
+
+  // Plain text fallback
   if (typeof body === 'string' && body.trim()) {
     return (
       <div className={`prose prose-sm max-w-none dark:prose-invert whitespace-pre-wrap ${className ?? ''}`}>
