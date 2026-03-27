@@ -78,6 +78,9 @@ export interface Config {
     contacts: Contact;
     counties: County;
     roles: Role;
+    'forum-categories': ForumCategory;
+    'forum-threads': ForumThread;
+    'forum-replies': ForumReply;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -106,6 +109,9 @@ export interface Config {
     contacts: ContactsSelect<false> | ContactsSelect<true>;
     counties: CountiesSelect<false> | CountiesSelect<true>;
     roles: RolesSelect<false> | RolesSelect<true>;
+    'forum-categories': ForumCategoriesSelect<false> | ForumCategoriesSelect<true>;
+    'forum-threads': ForumThreadsSelect<false> | ForumThreadsSelect<true>;
+    'forum-replies': ForumRepliesSelect<false> | ForumRepliesSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -936,6 +942,119 @@ export interface Role {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "forum-categories".
+ */
+export interface ForumCategory {
+  id: string;
+  /**
+   * e.g. "Escambia County Forum" or "Statewide Discussion"
+   */
+  title: string;
+  /**
+   * URL slug — e.g. "escambia" — lowercase, no spaces
+   */
+  slug: string;
+  /**
+   * Short description shown on the forum index
+   */
+  description?: string | null;
+  /**
+   * Associated county (leave blank for statewide)
+   */
+  county?: (string | null) | County;
+  /**
+   * Users who can moderate this category (pin/lock/delete threads)
+   */
+  moderators?: (string | User)[] | null;
+  /**
+   * Lower numbers appear first
+   */
+  displayOrder?: number | null;
+  /**
+   * Inactive categories are hidden from the forum index
+   */
+  isActive?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "forum-threads".
+ */
+export interface ForumThread {
+  id: string;
+  title: string;
+  body: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * Which forum this thread belongs to
+   */
+  category: string | ForumCategory;
+  author: string | User;
+  /**
+   * Only approved threads are visible to members
+   */
+  status?: ('approved' | 'pending' | 'rejected') | null;
+  /**
+   * Pinned threads appear at the top of the category
+   */
+  pinned?: boolean | null;
+  /**
+   * Locked threads accept no new replies
+   */
+  locked?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "forum-replies".
+ */
+export interface ForumReply {
+  id: string;
+  body: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  thread: string | ForumThread;
+  author: string | User;
+  /**
+   * Set this to nest a reply under another reply (one level deep)
+   */
+  parentReply?: (string | null) | ForumReply;
+  /**
+   * Only approved replies are visible to members
+   */
+  status?: ('approved' | 'pending' | 'rejected') | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1167,6 +1286,18 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'roles';
         value: string | Role;
+      } | null)
+    | ({
+        relationTo: 'forum-categories';
+        value: string | ForumCategory;
+      } | null)
+    | ({
+        relationTo: 'forum-threads';
+        value: string | ForumThread;
+      } | null)
+    | ({
+        relationTo: 'forum-replies';
+        value: string | ForumReply;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -1612,6 +1743,49 @@ export interface RolesSelect<T extends boolean = true> {
   title?: T;
   description?: T;
   displayOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "forum-categories_select".
+ */
+export interface ForumCategoriesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  description?: T;
+  county?: T;
+  moderators?: T;
+  displayOrder?: T;
+  isActive?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "forum-threads_select".
+ */
+export interface ForumThreadsSelect<T extends boolean = true> {
+  title?: T;
+  body?: T;
+  category?: T;
+  author?: T;
+  status?: T;
+  pinned?: T;
+  locked?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "forum-replies_select".
+ */
+export interface ForumRepliesSelect<T extends boolean = true> {
+  body?: T;
+  thread?: T;
+  author?: T;
+  parentReply?: T;
+  status?: T;
   updatedAt?: T;
   createdAt?: T;
 }
