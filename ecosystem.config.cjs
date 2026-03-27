@@ -18,7 +18,7 @@ module.exports = {
       name: 'flarepublic',
       script: 'node_modules/.bin/next',
       args: 'start',
-      cwd: '/home/flarepublic',   // ← adjust to your actual deploy path on the VPS
+      cwd: '/home/jasonbee/new.flarepublic.us/app',
       instances: 1,               // single instance — scale up if traffic grows
       exec_mode: 'fork',
       autorestart: true,
@@ -26,11 +26,11 @@ module.exports = {
       max_memory_restart: '512M', // restart if memory exceeds 512 MB
       env: {
         NODE_ENV: 'production',
-        PORT: 3000,
+        PORT: 8080,
       },
       // Log config
-      out_file: '/home/flarepublic/logs/out.log',
-      error_file: '/home/flarepublic/logs/error.log',
+      out_file: '/home/jasonbee/new.flarepublic.us/app/logs/out.log',
+      error_file: '/home/jasonbee/new.flarepublic.us/app/logs/error.log',
       log_date_format: 'YYYY-MM-DD HH:mm:ss',
       merge_logs: true,
     },
