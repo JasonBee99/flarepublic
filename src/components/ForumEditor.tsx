@@ -93,10 +93,10 @@ export function ForumEditor({ value, onChange, placeholder = 'Write here…', mi
     const url = window.prompt('Enter URL', prev)
     if (url === null) return
     if (url === '') {
-      editor.chain().focus().extendMarkToLink().unsetLink().run()
+      editor.chain().focus().unsetLink().run()
       return
     }
-    editor.chain().focus().extendMarkToLink().setLink({ href: url }).run()
+    editor.chain().focus().setLink({ href: url }).run()
   }
 
   return (
