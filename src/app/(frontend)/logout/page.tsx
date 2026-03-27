@@ -1,11 +1,12 @@
 // src/app/(frontend)/logout/page.tsx
-// Server component that calls Payload's /api/users/logout, clears the cookie,
-// then redirects to home.
+// Logout via a Server Action — Next.js only allows cookie mutation in
+// Server Actions or Route Handlers, not directly in page components.
 
-import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
 
-export default async function LogoutPage() {
+async function logoutAction() {
+  'use server'
   const cookieStore = await cookies()
   const token = cookieStore.get('payload-token')?.value
 
@@ -19,10 +20,13 @@ export default async function LogoutPage() {
     } catch {
       // best-effort — clear cookie regardless
     }
-
-    // Delete the cookie server-side
     cookieStore.delete('payload-token')
   }
 
   redirect('/')
+}
+
+export default async function LogoutPage() {
+  // Trigger the server action immediately on page load
+  await logoutAction()
 }
