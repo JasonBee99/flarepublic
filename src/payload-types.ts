@@ -81,6 +81,7 @@ export interface Config {
     'forum-categories': ForumCategory;
     'forum-threads': ForumThread;
     'forum-replies': ForumReply;
+    'county-posts': CountyPost;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -112,6 +113,7 @@ export interface Config {
     'forum-categories': ForumCategoriesSelect<false> | ForumCategoriesSelect<true>;
     'forum-threads': ForumThreadsSelect<false> | ForumThreadsSelect<true>;
     'forum-replies': ForumRepliesSelect<false> | ForumRepliesSelect<true>;
+    'county-posts': CountyPostsSelect<false> | CountyPostsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -443,7 +445,11 @@ export interface User {
   /**
    * County this member is associated with
    */
-  county?: (string | null) | County;
+  county: (string | null) | County;
+  /**
+   * Site-wide admin — can manage all counties, posts, and forums
+   */
+  isAdmin?: boolean | null;
   /**
    * Admin must approve before member can access forum and protected content
    */
@@ -485,6 +491,10 @@ export interface County {
    * e.g. Escambia County
    */
   name: string;
+  /**
+   * URL slug — e.g. "escambia" — lowercase, no spaces
+   */
+  slug: string;
   state?: string | null;
   description?: string | null;
   /**
@@ -1050,6 +1060,37 @@ export interface ForumReply {
    * Only approved replies are visible to members
    */
   status?: ('approved' | 'pending' | 'rejected') | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "county-posts".
+ */
+export interface CountyPost {
+  id: string;
+  title: string;
+  county: string | County;
+  author: string | User;
+  status?: ('published' | 'draft') | null;
+  publishedAt?: string | null;
+  excerpt?: string | null;
+  heroImage?: (string | null) | Media;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -1786,6 +1827,18 @@ export interface ForumRepliesSelect<T extends boolean = true> {
   author?: T;
   parentReply?: T;
   status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+export interface CountyPostsSelect<T extends boolean = true> {
+  title?: T;
+  county?: T;
+  author?: T;
+  status?: T;
+  publishedAt?: T;
+  excerpt?: T;
+  heroImage?: T;
+  content?: T;
   updatedAt?: T;
   createdAt?: T;
 }
