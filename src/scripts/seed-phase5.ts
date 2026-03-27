@@ -66,7 +66,7 @@ async function seedCounties(payload: AnyPayload): Promise<IdMap> {
       console.log(`  ✓ County exists: ${data.name}`)
       map[data.name] = existing.docs[0].id as string
     } else {
-      const created = await payload.create({ collection: 'counties', data })
+      const created = await payload.create({ collection: 'counties', data: data as any })
       console.log(`  + County created: ${data.name}`)
       map[data.name] = created.id as string
     }
@@ -82,7 +82,7 @@ async function seedRoles(payload: AnyPayload): Promise<IdMap> {
       console.log(`  ✓ Role exists: ${data.title}`)
       map[data.title] = existing.docs[0].id as string
     } else {
-      const created = await payload.create({ collection: 'roles', data })
+      const created = await payload.create({ collection: 'roles', data: data as any })
       console.log(`  + Role created: ${data.title}`)
       map[data.title] = created.id as string
     }
@@ -98,7 +98,7 @@ async function seedDocumentCategories(payload: AnyPayload): Promise<IdMap> {
       console.log(`  ✓ DocumentCategory exists: ${data.title}`)
       map[data.title] = existing.docs[0].id as string
     } else {
-      const created = await payload.create({ collection: 'document-categories', data })
+      const created = await payload.create({ collection: 'document-categories', data: data as any })
       console.log(`  + DocumentCategory created: ${data.title}`)
       map[data.title] = created.id as string
     }
@@ -114,7 +114,7 @@ async function seedFileTypes(payload: AnyPayload): Promise<IdMap> {
       console.log(`  ✓ FileType exists: ${data.label}`)
       map[data.label] = existing.docs[0].id as string
     } else {
-      const created = await payload.create({ collection: 'file-types', data })
+      const created = await payload.create({ collection: 'file-types', data: data as any })
       console.log(`  + FileType created: ${data.label}`)
       map[data.label] = created.id as string
     }
@@ -134,7 +134,7 @@ async function seedContacts(payload: AnyPayload, countyMap: IdMap, roleMap: IdMa
     if (!countyId) { console.warn(`  ⚠ Skipping ${c.name} — county not found: ${c.county}`); continue }
     const data: Record<string, unknown> = { name: c.name, county: countyId, displayOrder: c.displayOrder, isActive: true }
     if (roleId) data.role = roleId
-    await payload.create({ collection: 'contacts', data })
+    await payload.create({ collection: 'contacts', data: data as any })
     console.log(`  + Contact created: ${c.name}`)
   }
 }

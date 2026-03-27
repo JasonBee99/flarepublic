@@ -141,7 +141,8 @@ async function seedForumCategories(payload: AnyPayload, countyMap: IdMap) {
       }
     }
 
-    await payload.create({ collection: 'forum-categories', data })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await payload.create({ collection: 'forum-categories', data: data as any })
     console.log(`  + Created: ${cat.title}`)
   }
 }
