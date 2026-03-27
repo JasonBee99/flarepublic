@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { thread } = await params
   const payload = await getPayload({ config: configPromise })
   const result = await payload.find({
-    collection: 'forum-threads',
+    collection: 'forum-threads' as any,
     where: { id: { equals: thread } },
     limit: 1,
     overrideAccess: true,
@@ -74,7 +74,7 @@ export default async function ThreadPage({ params, searchParams }: Props) {
   const payload = await getPayload({ config: configPromise })
 
   const threadResult = await payload.find({
-    collection: 'forum-threads',
+    collection: 'forum-threads' as any,
     where: {
       and: [
         { id: { equals: threadId } },
@@ -89,7 +89,7 @@ export default async function ThreadPage({ params, searchParams }: Props) {
   if (!thread) notFound()
 
   const catResult = await payload.find({
-    collection: 'forum-categories',
+    collection: 'forum-categories' as any,
     where: { slug: { equals: category } },
     limit: 1,
     depth: 1,
@@ -111,7 +111,7 @@ export default async function ThreadPage({ params, searchParams }: Props) {
 
   // Paginated replies
   const replyResult = await payload.find({
-    collection: 'forum-replies',
+    collection: 'forum-replies' as any,
     where: {
       and: [
         { thread: { equals: thread.id } },

@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { category } = await params
   const payload = await getPayload({ config: configPromise })
   const result = await payload.find({
-    collection: 'forum-categories',
+    collection: 'forum-categories' as any,
     where: { slug: { equals: category } },
     limit: 1,
     overrideAccess: true,
@@ -75,7 +75,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
   const payload = await getPayload({ config: configPromise })
 
   const catResult = await payload.find({
-    collection: 'forum-categories',
+    collection: 'forum-categories' as any,
     where: { slug: { equals: category } },
     limit: 1,
     depth: 1,
@@ -97,7 +97,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
     currentPage === 1
       ? (
           await payload.find({
-            collection: 'forum-threads',
+            collection: 'forum-threads' as any,
             where: {
               and: [
                 { category: { equals: cat.id } },
@@ -115,7 +115,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
 
   // Paginated non-pinned threads
   const threadResult = await payload.find({
-    collection: 'forum-threads',
+    collection: 'forum-threads' as any,
     where: {
       and: [
         { category: { equals: cat.id } },
@@ -137,7 +137,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
   const replyCounts: Record<string, number> = {}
   for (const t of allThreads) {
     const rc = await payload.count({
-      collection: 'forum-replies',
+      collection: 'forum-replies' as any,
       where: {
         and: [
           { thread: { equals: t.id } },

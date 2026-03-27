@@ -43,7 +43,7 @@ export default async function NewThreadPage({
   const payload = await getPayload({ config: configPromise })
 
   const catResult = await payload.find({
-    collection: 'forum-categories',
+    collection: 'forum-categories' as any,
     where: { isActive: { equals: true } },
     sort: 'displayOrder',
     limit: 100,

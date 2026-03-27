@@ -42,7 +42,7 @@ export default async function ForumPage() {
   const payload = await getPayload({ config: configPromise })
 
   const catResult = await payload.find({
-    collection: 'forum-categories',
+    collection: 'forum-categories' as any,
     where: { isActive: { equals: true } },
     sort: 'title',
     limit: 100,
@@ -54,7 +54,7 @@ export default async function ForumPage() {
   const threadCounts: Record<string, number> = {}
   for (const cat of catResult.docs) {
     const count = await payload.count({
-      collection: 'forum-threads',
+      collection: 'forum-threads' as any,
       where: {
         and: [
           { category: { equals: cat.id } },
