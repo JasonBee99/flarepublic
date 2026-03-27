@@ -196,7 +196,7 @@ export const seed = async ({
   const contactForm = await payload.create({
     collection: 'forms',
     depth: 0,
-    data: contactFormData,
+    data: contactFormData as any,
   })
 
   payload.logger.info(`— Seeding pages...`)
@@ -210,7 +210,7 @@ export const seed = async ({
     payload.create({
       collection: 'pages',
       depth: 0,
-      data: contactPageData({ contactForm: contactForm }),
+      data: contactPageData({ contactForm: contactForm }) as any,
     }),
   ])
 
