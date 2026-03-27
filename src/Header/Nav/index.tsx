@@ -129,3 +129,6 @@ export function Nav({ groups, user }: NavProps) {
     </div>
   )
 }
+
+// Alias for backwards compatibility
+export { Nav as HeaderNav }
