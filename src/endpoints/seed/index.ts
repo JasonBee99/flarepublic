@@ -48,10 +48,8 @@ export const seed = async ({
     globals.map((global) =>
       payload.updateGlobal({
         slug: global,
-        data: {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          navItems: [] as any,
-        },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        data: { navItems: [] } as any,
         depth: 0,
         context: {
           disableRevalidate: true,
