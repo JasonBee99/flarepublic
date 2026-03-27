@@ -16,20 +16,7 @@ import { Code } from '../blocks/Code/config'
 import { MediaBlock } from '../blocks/MediaBlock/config'
 
 // Admins OR members of the same county can read
-const readAccess: Access = ({ req: { user } }) => {
-  if (!user) return false
-  // Payload admins see everything
-  if (user.role === 'admin' || (user as any)._verified) {
-    // fall through to county check — we rely on isAdmin field
-  }
-  // If user has no county, block
-  const userCounty = (user as any).county
-  if (!userCounty) return false
-  const userCountyId = typeof userCounty === 'object' ? userCounty.id : userCounty
-  return {
-    county: { equals: userCountyId },
-  }
-}
+
 
 // Admins see all; county members see only their county
 const readAccessWithAdmin: Access = ({ req: { user } }) => {
