@@ -219,6 +219,7 @@ export const seed = async ({
   await Promise.all([
     payload.updateGlobal({
       slug: 'header',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       data: {
         navItems: [
           {
@@ -239,10 +240,11 @@ export const seed = async ({
             },
           },
         ],
-      },
+      } as any,
     }),
     payload.updateGlobal({
       slug: 'footer',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       data: {
         navItems: [
           {
@@ -269,7 +271,7 @@ export const seed = async ({
             },
           },
         ],
-      },
+      } as any,
     }),
   ])
 
