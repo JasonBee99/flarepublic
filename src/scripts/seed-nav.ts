@@ -39,8 +39,8 @@ const NAV_GROUPS = [
     requiresAuth: false,
     requiresApproval: false,
     items: [
-      { label: 'EscaRosa Chapter', url: '/community/escarosa', requiresAuth: false,  requiresApproval: false },
-      { label: 'Forum',            url: '/forum',              requiresAuth: true,   requiresApproval: true  },
+      { label: 'EscaRosa Chapter', url: '/community/escarosa', requiresAuth: false, requiresApproval: false },
+      { label: 'Forum',            url: '/forum',              requiresAuth: true,  requiresApproval: true  },
     ],
   },
   {
@@ -70,16 +70,24 @@ const NAV_GROUPS = [
 ]
 
 async function main() {
+  console.log('🔌 Connecting to Payload...')
+  
   const payload = await getPayload({ config: configPromise })
-
+  
+  console.log('✓ Connected')
   console.log('\n🧭 Seeding MainNav global...')
 
-  await payload.updateGlobal({
-    slug: 'main-nav',
-    data: { groups: NAV_GROUPS } as any, // eslint-disable-line @typescript-eslint/no-explicit-any
-  })
+  try {
+    const result = await payload.updateGlobal({
+      slug: 'main-nav',
+      data: { groups: NAV_GROUPS } as any, // eslint-disable-line @typescript-eslint/no-explicit-any
+    })
+    console.log('  ✓ MainNav updated, groups saved:', result?.groups?.length ?? 0)
+  } catch (err) {
+    console.error('  ✗ updateGlobal failed:', err)
+    process.exit(1)
+  }
 
-  console.log('  ✓ MainNav updated with', NAV_GROUPS.length, 'groups')
   console.log('\n✅ Nav seed complete.\n')
   process.exit(0)
 }
