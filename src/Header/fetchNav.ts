@@ -1,27 +1,23 @@
 // src/Header/fetchNav.ts
-// Fetches the main-nav global from Payload's REST API.
-// Uses Next.js `cache` so the fetch is deduplicated per request
-// and revalidates every 60 seconds (ISR-friendly).
+// Fetches the main-nav global directly via Payload's local API.
+// Using the local API (not HTTP fetch) means this works at build time,
+// during SSR, and in production without needing the server to be running.
 
 import { cache } from 'react'
+import configPromise from '@payload-config'
+import { getPayload } from 'payload'
 import type { MainNavGlobal } from '@/globals/types'
 
 export const fetchMainNav = cache(async (): Promise<MainNavGlobal | null> => {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL ?? 'http://localhost:3000'
-    const res = await fetch(`${baseUrl}/api/globals/main-nav?depth=1`, {
-      next: { revalidate: 60 },
+    const payload = await getPayload({ config: configPromise })
+    const data = await payload.findGlobal({
+      slug: 'main-nav',
+      depth: 1,
     })
-
-    if (!res.ok) {
-      console.warn('[fetchMainNav] Non-OK response:', res.status)
-      return null
-    }
-
-    const data = await res.json()
-    return data as MainNavGlobal
+    return data as unknown as MainNavGlobal
   } catch (err) {
-    console.error('[fetchMainNav] Fetch error:', err)
+    console.error('[fetchMainNav] Error:', err)
     return null
   }
 })
