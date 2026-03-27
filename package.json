@@ -24,7 +24,8 @@
     "seed:documents": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/seed-documents.ts",
     "seed:forum": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/seed-forum.ts",
     "seed:nav": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/seed-nav.ts",
-    "seed:documents:vps": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/seed-documents-vps.ts"
+    "seed:documents:vps": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/seed-documents-vps.ts",
+    "seed:county-slugs": "npx tsx src/scripts/seed-county-slugs.ts"
   },
   "dependencies": {
     "@payloadcms/admin-bar": "3.80.0",

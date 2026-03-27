@@ -10,7 +10,7 @@ export const Counties: CollectionConfig = {
     update: authenticated,
   },
   admin: {
-    defaultColumns: ['name', 'state', 'displayOrder'],
+    defaultColumns: ['name', 'slug', 'state', 'displayOrder'],
     useAsTitle: 'name',
   },
   fields: [
@@ -19,6 +19,13 @@ export const Counties: CollectionConfig = {
       type: 'text',
       required: true,
       admin: { description: 'e.g. Escambia County' },
+    },
+    {
+      name: 'slug',
+      type: 'text',
+      required: true,
+      unique: true,
+      admin: { description: 'URL slug — e.g. "escambia" — lowercase, no spaces' },
     },
     {
       name: 'state',

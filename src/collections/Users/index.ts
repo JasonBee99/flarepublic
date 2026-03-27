@@ -11,7 +11,7 @@ export const Users: CollectionConfig = {
     update: authenticated,
   },
   admin: {
-    defaultColumns: ['name', 'email', 'county', 'approved', 'createdAt'],
+    defaultColumns: ['name', 'email', 'county', 'approved', 'isAdmin', 'createdAt'],
     useAsTitle: 'name',
   },
   auth: true,
@@ -25,7 +25,17 @@ export const Users: CollectionConfig = {
       name: 'county',
       type: 'relationship',
       relationTo: 'counties',
+      required: true,
       admin: { description: 'County this member is associated with' },
+    },
+    {
+      name: 'isAdmin',
+      type: 'checkbox',
+      defaultValue: false,
+      admin: {
+        position: 'sidebar',
+        description: 'Site-wide admin — can manage all counties, posts, and forums',
+      },
     },
     {
       name: 'approved',

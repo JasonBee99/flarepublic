@@ -1,6 +1,6 @@
 'use client'
 // src/app/(frontend)/register/RegisterForm.tsx
-// Client-side form — calls Payload's /api/users endpoint directly.
+// County selection is now REQUIRED at registration.
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
@@ -18,9 +18,8 @@ export function RegisterForm() {
   const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  // Load counties for the select dropdown
   useEffect(() => {
-    fetch('/api/counties?limit=100&sort=displayOrder')
+    fetch('/api/counties?limit=100&sort=name')
       .then((r) => r.json())
       .then((data) => setCounties(data?.docs ?? []))
       .catch(() => {})
@@ -40,12 +39,18 @@ export function RegisterForm() {
       return
     }
 
+    if (!data.county) {
+      setError('Please select your county.')
+      setLoading(false)
+      return
+    }
+
     const body: Record<string, unknown> = {
       name: data.name,
       email: data.email,
       password: data.password,
+      county: data.county,
     }
-    if (data.county) body.county = data.county
 
     try {
       const res = await fetch('/api/users', {
@@ -132,26 +137,29 @@ export function RegisterForm() {
         />
       </div>
 
-      {/* County */}
-      {counties.length > 0 && (
-        <div>
-          <label htmlFor="county" className="mb-1.5 block text-sm font-medium">
-            County <span className="text-muted-foreground text-xs">(optional)</span>
-          </label>
-          <select
-            id="county"
-            name="county"
-            className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-          >
-            <option value="">— Select your county —</option>
-            {counties.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
+      {/* County — required */}
+      <div>
+        <label htmlFor="county" className="mb-1.5 block text-sm font-medium">
+          Your County <span className="text-destructive">*</span>
+        </label>
+        <select
+          id="county"
+          name="county"
+          required
+          className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+          defaultValue=""
+        >
+          <option value="" disabled>— Select your Florida county —</option>
+          {counties.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.name}
+            </option>
+          ))}
+        </select>
+        <p className="mt-1 text-xs text-muted-foreground">
+          This determines which county-specific content and forums you can access.
+        </p>
+      </div>
 
       {/* Password */}
       <div>
@@ -185,14 +193,12 @@ export function RegisterForm() {
         />
       </div>
 
-      {/* Error */}
       {error && (
         <p className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
           {error}
         </p>
       )}
 
-      {/* Submit */}
       <button
         type="submit"
         disabled={loading}
