@@ -49,7 +49,8 @@ const NAV_GROUPS = [
     requiresAuth: false,
     requiresApproval: false,
     items: [
-      { label: 'Documents',         url: '/resources/documents', requiresAuth: false, requiresApproval: false },
+      { label: 'Documents',           url: '/resources/documents',           requiresAuth: false, requiresApproval: false },
+      { label: 'Personality Profile', url: '/resources/personality-profile', requiresAuth: false, requiresApproval: false },
       { label: 'Contact Directory', url: '/contacts',            requiresAuth: false, requiresApproval: false },
     ],
   },
