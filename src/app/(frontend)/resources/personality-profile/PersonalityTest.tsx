@@ -3,8 +3,9 @@
 // Interactive Personality Profile test based on the Personality Plus framework
 // by Fred Littauer. Three tabs: Take the test, My Results, Team Comparison.
 
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { ChevronDown, Copy, Check, UserPlus, RotateCcw, Users, ClipboardList, BarChart3 } from 'lucide-react'
+import { PersonalityGuide } from '@/components/PersonalityGuide'
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -402,6 +403,14 @@ export default function PersonalityTest() {
   const [memM, setMemM] = useState('')
   const [memP, setMemP] = useState('')
 
+  // Open on results tab if ?tab=results is in the URL (e.g. from member dashboard link)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('tab') === 'results') {
+      setTab('results')
+    }
+  }, [])
+
   const count = Object.keys(selections).length
   const progress = Math.round((count / 40) * 100)
 
@@ -661,6 +670,9 @@ export default function PersonalityTest() {
             <RotateCcw className="h-4 w-4" /> Retake
           </button>
         </div>
+
+        {/* Personality Guide — full reference material from pages 3 & 5 */}
+        <PersonalityGuide dominant={dom} />
       </div>
     )
   }

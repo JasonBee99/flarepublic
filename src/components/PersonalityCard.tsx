@@ -115,10 +115,10 @@ export function PersonalityCard({ result }: Props) {
           {/* Actions */}
           <div className="flex flex-wrap gap-2 pt-1">
             <Link
-              href="/resources/personality-profile"
+              href="/resources/personality-profile?tab=results"
               className="inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-xs font-medium hover:border-primary/40 transition"
             >
-              <Brain className="h-3.5 w-3.5" /> View full results
+              <Brain className="h-3.5 w-3.5" /> View full results &amp; guide
             </Link>
             <a
               href="/documents/personality-profile.pdf"
