@@ -25,8 +25,8 @@ export const Users: CollectionConfig = {
       name: 'county',
       type: 'relationship',
       relationTo: 'counties',
-      required: true,
-      admin: { description: 'County this member is associated with' },
+      required: false,
+      admin: { description: 'County this member is associated with (not required for Site Admins)' },
     },
     {
       name: 'role',
