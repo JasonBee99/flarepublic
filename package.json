@@ -26,7 +26,8 @@
     "seed:nav": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/seed-nav.ts",
     "seed:documents:vps": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/seed-documents-vps.ts",
     "seed:county-slugs": "npx tsx src/scripts/seed-county-slugs.ts",
-    "migrate:roles": "npx tsx src/scripts/migrate-roles.ts"
+    "migrate:roles": "npx tsx src/scripts/migrate-roles.ts",
+    "approve:all": "npx tsx src/scripts/approve-all-users.ts"
   },
   "dependencies": {
     "@payloadcms/admin-bar": "3.80.0",
