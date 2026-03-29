@@ -17,9 +17,10 @@ const NAV_GROUPS = [
     requiresAuth: false,
     requiresApproval: false,
     items: [
-      { label: "Newby's Corner",    url: '/learn/newbys-corner',  requiresAuth: false, requiresApproval: false },
-      { label: 'Fast Track',        url: '/learn/fast-track',     requiresAuth: false, requiresApproval: false },
-      { label: 'County Assemblies', url: '/learn/fast-track',     requiresAuth: false, requiresApproval: false },
+      { label: "Newby's Corner",    url: '/learn/newbys-corner',      requiresAuth: false, requiresApproval: false },
+      { label: 'Fast Track',        url: '/learn/fast-track',          requiresAuth: false, requiresApproval: false },
+      { label: 'County Assemblies', url: '/learn/county-assemblies',   requiresAuth: false, requiresApproval: false },
+      { label: 'Courses',           url: '/learn/courses',             requiresAuth: true,  requiresApproval: true  },
     ],
   },
   {
