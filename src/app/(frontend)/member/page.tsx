@@ -145,7 +145,7 @@ export default async function MemberPage({
               title="Documents"
               description="Browse PDFs, forms, and reference materials."
             />
-            {user.isAdmin && (
+            {user.role === 'siteAdmin' && (
               <MemberCard
                 href="/admin"
                 icon="⚙️"

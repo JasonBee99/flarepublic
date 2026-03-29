@@ -63,7 +63,7 @@ export async function middleware(request: NextRequest) {
     }
 
     // Site-wide admins bypass county check
-    if (user.isAdmin) return NextResponse.next()
+    if (user.role === 'siteAdmin') return NextResponse.next()
 
     // Extract requested county slug from path: /county/[slug]/...
     const segments = pathname.split('/').filter(Boolean)

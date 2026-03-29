@@ -65,7 +65,7 @@ export default async function CountyPage({ params, searchParams }: Props) {
   if (!county) return notFound()
 
   // Secondary access check — non-admins must belong to this county
-  if (!user.isAdmin) {
+  if (!user.role === 'siteAdmin') {
     const userCountyId = typeof user.county === 'object' ? user.county?.id : user.county
     if (userCountyId !== county.id) {
       // Middleware should have caught this, but belt-and-suspenders
@@ -165,7 +165,7 @@ export default async function CountyPage({ params, searchParams }: Props) {
             <div className="rounded-lg border border-dashed border-border p-8 text-center text-muted-foreground">
               <PenSquare className="mx-auto mb-3 h-8 w-8 opacity-40" />
               <p className="text-sm">No posts yet for {county.name}.</p>
-              {(user.isAdmin) && (
+              {(user.role === 'siteAdmin') && (
                 <Link
                   href={`/county/${slug}/new-post`}
                   className="mt-3 inline-block text-sm font-medium text-primary hover:underline"

@@ -447,9 +447,9 @@ export interface User {
    */
   county: (string | null) | County;
   /**
-   * Site-wide admin — can manage all counties, posts, and forums
+   * Member = standard access. County Organizer = manages their county. Site Admin = full access.
    */
-  isAdmin?: boolean | null;
+  role: 'member' | 'countyOrganizer' | 'siteAdmin';
   /**
    * Admin must approve before member can access forum and protected content
    */

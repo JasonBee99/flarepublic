@@ -29,12 +29,18 @@ export const Users: CollectionConfig = {
       admin: { description: 'County this member is associated with' },
     },
     {
-      name: 'isAdmin',
-      type: 'checkbox',
-      defaultValue: false,
+      name: 'role',
+      type: 'select',
+      defaultValue: 'member',
+      required: true,
+      options: [
+        { label: 'Member', value: 'member' },
+        { label: 'County Organizer', value: 'countyOrganizer' },
+        { label: 'Site Admin', value: 'siteAdmin' },
+      ],
       admin: {
         position: 'sidebar',
-        description: 'Site-wide admin — can manage all counties, posts, and forums',
+        description: 'Member = standard access. County Organizer = manages their county. Site Admin = full access.',
       },
     },
     {

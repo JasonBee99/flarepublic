@@ -55,7 +55,7 @@ export default async function NewCountyPostPage({ params }: Props) {
   if (!county) return notFound()
 
   // Non-admins must belong to this county
-  if (!user.isAdmin) {
+  if (!user.role === 'siteAdmin') {
     const userCountyId = typeof user.county === 'object' ? user.county?.id : user.county
     if (userCountyId !== county.id) redirect(`/county/${slug}`)
   }

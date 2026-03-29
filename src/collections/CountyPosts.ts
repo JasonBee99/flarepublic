@@ -21,8 +21,7 @@ import { MediaBlock } from '../blocks/MediaBlock/config'
 // Admins see all; county members see only their county
 const readAccessWithAdmin: Access = ({ req: { user } }) => {
   if (!user) return false
-  const isAdmin = (user as any).isAdmin === true
-  if (isAdmin) return true
+  if ((user as any).role === 'siteAdmin') return true
   const userCounty = (user as any).county
   if (!userCounty) return false
   const userCountyId = typeof userCounty === 'object' ? userCounty.id : userCounty
@@ -31,18 +30,19 @@ const readAccessWithAdmin: Access = ({ req: { user } }) => {
   }
 }
 
-// Create: must be logged in + approved; county on post must match user's county (admins bypass)
+// Create: must be logged in + approved
 const createAccess: Access = ({ req: { user } }) => {
   if (!user) return false
   const u = user as any
-  if (u.isAdmin) return true
+  if (u.role === 'siteAdmin' || u.role === 'countyOrganizer') return true
   return Boolean(u.approved)
 }
 
-// Update/Delete: admins only
+// Update/Delete: siteAdmin or countyOrganizer only
 const adminOnly: Access = ({ req: { user } }) => {
   if (!user) return false
-  return (user as any).isAdmin === true
+  const role = (user as any).role
+  return role === 'siteAdmin' || role === 'countyOrganizer'
 }
 
 export const CountyPosts: CollectionConfig = {
