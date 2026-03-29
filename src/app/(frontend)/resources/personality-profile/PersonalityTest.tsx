@@ -255,10 +255,10 @@ const ROWS: Row[] = [
 ]
 
 const TYPE_INFO: Record<TypeKey, { label: string; sub: string; accent: string; bg: string; text: string; bar: string }> = {
-  S: { label: 'Sanguine', sub: 'Popular', accent: '#c2410c', bg: 'bg-orange-50', text: 'text-orange-800', bar: 'bg-orange-400' },
-  C: { label: 'Choleric', sub: 'Powerful', accent: '#1d4ed8', bg: 'bg-blue-50', text: 'text-blue-800', bar: 'bg-blue-500' },
-  M: { label: 'Melancholy', sub: 'Perfect', accent: '#6d28d9', bg: 'bg-violet-50', text: 'text-violet-800', bar: 'bg-violet-500' },
-  P: { label: 'Phlegmatic', sub: 'Peaceful', accent: '#065f46', bg: 'bg-emerald-50', text: 'text-emerald-800', bar: 'bg-emerald-500' },
+  S: { label: 'Sanguine', sub: 'Popular', accent: '#c2410c', bg: 'bg-muted', text: 'text-foreground', bar: 'bg-orange-400' },
+  C: { label: 'Choleric', sub: 'Powerful', accent: '#1d4ed8', bg: 'bg-muted', text: 'text-foreground', bar: 'bg-blue-500' },
+  M: { label: 'Melancholy', sub: 'Perfect', accent: '#6d28d9', bg: 'bg-muted', text: 'text-foreground', bar: 'bg-violet-500' },
+  P: { label: 'Phlegmatic', sub: 'Peaceful', accent: '#065f46', bg: 'bg-muted', text: 'text-foreground', bar: 'bg-emerald-500' },
 }
 
 const LEADER_INFO: Record<TypeKey, { title: string; summary: string; strengths: string[]; watchFor: string; tags: string[] }> = {
@@ -649,8 +649,8 @@ export default function PersonalityTest() {
             ))}
           </div>
 
-          <div className="rounded-lg bg-amber-50 border border-amber-200 px-4 py-3">
-            <p className="text-xs text-amber-800 leading-relaxed">{L.watchFor}</p>
+          <div className="rounded-lg bg-muted border border-border px-4 py-3">
+            <p className="text-xs text-muted-foreground leading-relaxed">{L.watchFor}</p>
           </div>
         </div>
 

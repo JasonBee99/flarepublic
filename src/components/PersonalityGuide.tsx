@@ -3,6 +3,13 @@
 //   1. Strengths & Weaknesses trait table (Emotions / Work / Friends sections)
 //   2. Understanding Your Personality Profile Scores (interpretation guide)
 // The dominant type column is highlighted throughout.
+//
+// COLOR RULE: No hardcoded Tailwind color classes (no -50, -100, -200, bg-white, etc.).
+// All backgrounds use CSS theme tokens: bg-background, bg-card, bg-muted, bg-primary/N,
+// border-border, text-foreground, text-muted-foreground. This ensures correct rendering
+// in both light and dark themes. Only the colored column headers (bg-orange-500 etc.)
+// and border accents (border-orange-500 etc.) are allowed as fixed colors since they
+// are intentional branding, not backgrounds that need to adapt.
 
 'use client'
 
@@ -11,34 +18,18 @@ import { ChevronDown, ChevronUp } from 'lucide-react'
 
 type TypeKey = 'S' | 'C' | 'M' | 'P'
 
+// Only headerBg (solid colored header) and colBorder (accent border on dominant column)
+// use fixed Tailwind colors. Everything else uses theme tokens in the render functions.
 const TYPE_STYLE: Record<TypeKey, {
-  label: string; sub: string; headerBg: string; headerText: string;
-  colBg: string; colBorder: string; badge: string
+  label: string
+  sub: string
+  headerBg: string   // solid color for the column header — intentional, not background
+  colBorder: string  // accent border for dominant column only
 }> = {
-  S: {
-    label: 'Sanguine', sub: 'Popular',
-    headerBg: 'bg-orange-500', headerText: 'text-white',
-    colBg: 'bg-orange-50', colBorder: 'border-orange-300',
-    badge: 'bg-orange-100 text-orange-800 border-orange-200',
-  },
-  C: {
-    label: 'Choleric', sub: 'Powerful',
-    headerBg: 'bg-blue-600', headerText: 'text-white',
-    colBg: 'bg-blue-50', colBorder: 'border-blue-300',
-    badge: 'bg-blue-100 text-blue-800 border-blue-200',
-  },
-  M: {
-    label: 'Melancholy', sub: 'Perfect',
-    headerBg: 'bg-violet-600', headerText: 'text-white',
-    colBg: 'bg-violet-50', colBorder: 'border-violet-300',
-    badge: 'bg-violet-100 text-violet-800 border-violet-200',
-  },
-  P: {
-    label: 'Phlegmatic', sub: 'Peaceful',
-    headerBg: 'bg-emerald-600', headerText: 'text-white',
-    colBg: 'bg-emerald-50', colBorder: 'border-emerald-300',
-    badge: 'bg-emerald-100 text-emerald-800 border-emerald-200',
-  },
+  S: { label: 'Sanguine',   sub: 'Popular',  headerBg: 'bg-orange-500', colBorder: 'border-orange-500' },
+  C: { label: 'Choleric',   sub: 'Powerful', headerBg: 'bg-blue-600',   colBorder: 'border-blue-500'   },
+  M: { label: 'Melancholy', sub: 'Perfect',  headerBg: 'bg-violet-600', colBorder: 'border-violet-500' },
+  P: { label: 'Phlegmatic', sub: 'Peaceful', headerBg: 'bg-emerald-600',colBorder: 'border-emerald-500'},
 }
 
 // ── Page 5 data: Strengths & Weaknesses trait table ──────────────────────────
@@ -386,10 +377,10 @@ const MASKING_CAUSES = [
   { n: 2,  text: 'An alcoholic parent in childhood, forcing unnatural pressures for the child to perform, often assuming parental roles not natural for a child.' },
   { n: 3,  text: 'Strong rejection feelings in childhood — a child who does not feel the love of one or both parents will often try to "be perfect" for the unloving parent.' },
   { n: 4,  text: 'Any form of emotional or physical abuse will quickly teach the child that the only way to stop the harsh treatment is to conform to the demands of the abusing parent.' },
-  { n: 5,  text: 'Childhood sexual interference or violation. The child subconsciously rationalizes that maybe if they were just good enough, they would be left alone.' },
-  { n: 6,  text: 'Single Parent Home. A first-born child may often be required to fulfill some of the roles of the absent parent, which are not consistent with the child\'s natural personality.' },
+  { n: 5,  text: "Childhood sexual interference or violation. The child subconsciously rationalizes that maybe if they were just good enough, they would be left alone." },
+  { n: 6,  text: "Single Parent Home. A first-born child may often be required to fulfill some of the roles of the absent parent, which are not consistent with the child's natural personality." },
   { n: 7,  text: 'Birth Order. Young parents frequently pour an overzealous energy into making their first child conform to their concept of what he/she should be.' },
-  { n: 8,  text: 'Legalistic Religious Home. Intensely regulatory standards where appearance and conformance are required will often throttle a child\'s natural personality and zest for living.' },
+  { n: 8,  text: "Legalistic Religious Home. Intensely regulatory standards where appearance and conformance are required will often throttle a child's natural personality and zest for living." },
   { n: 9,  text: 'A domineering and controlling spouse in adult life can have a similar effect as a domineering parent in childhood.' },
   { n: 10, text: 'Adult abuse or rejection in marriage will often have the same effect of distorting the natural personality, as the lonely or hurting person puts on a mask and simply gives up.' },
 ]
@@ -406,11 +397,7 @@ function SectionDivider({ label }: { label: string }) {
   )
 }
 
-function TraitTable({
-  section, dominant, isStrength,
-}: {
-  section: TraitSection; dominant: TypeKey; isStrength: boolean
-}) {
+function TraitTable({ section, dominant }: { section: TraitSection; dominant: TypeKey }) {
   const types: TypeKey[] = ['S', 'C', 'M', 'P']
   const maxRows = Math.max(...types.map(t => section.rows[t].length))
 
@@ -418,16 +405,14 @@ function TraitTable({
     <div className="mb-6">
       <h4 className="text-sm font-bold text-foreground mb-3 uppercase tracking-wide">{section.label}</h4>
       <div className="grid grid-cols-4 gap-0 rounded-xl overflow-hidden border border-border">
-        {/* Column headers */}
+        {/* Column headers — solid color intentional branding, always readable */}
         {types.map(t => {
           const style = TYPE_STYLE[t]
           const isDom = t === dominant
           return (
             <div
               key={t}
-              className={`px-3 py-2.5 text-center ${style.headerBg} ${style.headerText} ${
-                isDom ? 'ring-2 ring-inset ring-white/40' : 'opacity-70'
-              }`}
+              className={`px-3 py-2.5 text-center text-white ${style.headerBg} ${isDom ? 'ring-2 ring-inset ring-white/40' : 'opacity-60'}`}
             >
               <p className="text-xs font-bold">{style.label}</p>
               <p className="text-[10px] opacity-80">{style.sub}</p>
@@ -439,7 +424,7 @@ function TraitTable({
             </div>
           )
         })}
-        {/* Data rows */}
+        {/* Data rows — all backgrounds use theme tokens, no hardcoded light colors */}
         {Array.from({ length: maxRows }).map((_, rowIdx) => (
           types.map(t => {
             const style = TYPE_STYLE[t]
@@ -450,8 +435,8 @@ function TraitTable({
                 key={`${t}-${rowIdx}`}
                 className={`px-3 py-1.5 text-xs border-t border-border/50 ${
                   isDom
-                    ? `${style.colBg} font-medium text-foreground border-l-2 border-r-2 ${style.colBorder}`
-                    : 'text-foreground/70 bg-background'
+                    ? `bg-primary/10 font-medium text-foreground border-l-2 border-r-2 ${style.colBorder}`
+                    : 'bg-card text-muted-foreground'
                 }`}
               >
                 {trait ?? ''}
@@ -483,31 +468,31 @@ export function PersonalityGuide({ dominant }: Props) {
         <h2 className="text-2xl font-bold text-foreground">Personality Type Deep Dive</h2>
         <p className="mt-2 text-sm text-muted-foreground max-w-2xl leading-relaxed">
           Based on <em>Personality Plus</em> by Florence Littauer. The tables below cover every personality
-          type — your dominant type (<span className={`font-semibold ${domStyle.badge.split(' ')[1]}`}>{domStyle.label}</span>) is highlighted throughout.
+          type — your dominant type (<span className="font-semibold text-foreground">{domStyle.label}</span>) is highlighted throughout.
         </p>
       </div>
 
       {/* ── Strengths table ── */}
       <section>
         <div className="flex items-center gap-2 mb-4">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 border border-green-200">
-            Strengths
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-muted text-foreground text-xs font-semibold px-3 py-1 border border-border">
+            ✦ Strengths
           </span>
         </div>
         {STRENGTH_SECTIONS.map(section => (
-          <TraitTable key={section.label} section={section} dominant={dominant} isStrength={true} />
+          <TraitTable key={section.label} section={section} dominant={dominant} />
         ))}
       </section>
 
       {/* ── Weaknesses table ── */}
       <section>
         <div className="flex items-center gap-2 mb-4">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-100 text-rose-800 text-xs font-semibold px-3 py-1 border border-rose-200">
-            Weaknesses
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-muted text-foreground text-xs font-semibold px-3 py-1 border border-border">
+            ✦ Weaknesses
           </span>
         </div>
         {WEAKNESS_SECTIONS.map(section => (
-          <TraitTable key={section.label} section={section} dominant={dominant} isStrength={false} />
+          <TraitTable key={section.label} section={section} dominant={dominant} />
         ))}
       </section>
 
@@ -521,11 +506,13 @@ export function PersonalityGuide({ dominant }: Props) {
             <p className="text-sm font-semibold text-foreground">Understanding Your Personality Profile Scores</p>
             <p className="text-xs text-muted-foreground mt-0.5">Normal patterns · Unnatural combinations · Causes of masking</p>
           </div>
-          {interpretOpen ? <ChevronUp className="h-4 w-4 text-muted-foreground flex-shrink-0" /> : <ChevronDown className="h-4 w-4 text-muted-foreground flex-shrink-0" />}
+          {interpretOpen
+            ? <ChevronUp className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+            : <ChevronDown className="h-4 w-4 text-muted-foreground flex-shrink-0" />}
         </button>
 
         {interpretOpen && (
-          <div className="mt-3 rounded-xl border border-border bg-background p-6 space-y-7 text-sm leading-relaxed">
+          <div className="mt-3 rounded-xl border border-border bg-card p-6 space-y-7 text-sm leading-relaxed">
 
             {/* Normal Healthy Patterns */}
             <div>
@@ -540,7 +527,7 @@ export function PersonalityGuide({ dominant }: Props) {
                 {NATURAL_COMBOS.map(combo => (
                   <div
                     key={combo}
-                    className="rounded-lg border border-green-200 bg-green-50 px-3 py-2.5 text-xs font-medium text-green-800 text-center"
+                    className="rounded-lg border border-border bg-muted px-3 py-2.5 text-xs font-medium text-foreground text-center"
                   >
                     {combo}
                   </div>
@@ -565,7 +552,7 @@ export function PersonalityGuide({ dominant }: Props) {
                 {UNNATURAL_COMBOS.map(combo => (
                   <div
                     key={combo}
-                    className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2.5 text-xs font-semibold text-amber-800 text-center"
+                    className="rounded-lg border border-border bg-muted px-3 py-2.5 text-xs font-semibold text-foreground text-center"
                   >
                     ⚠ {combo}
                   </div>
@@ -592,7 +579,7 @@ export function PersonalityGuide({ dominant }: Props) {
               <div className="space-y-3">
                 {MASKING_CAUSES.map(({ n, text }) => (
                   <div key={n} className="flex gap-3">
-                    <span className="flex-shrink-0 h-6 w-6 rounded-full bg-muted flex items-center justify-center text-xs font-bold text-muted-foreground mt-0.5">
+                    <span className="flex-shrink-0 h-6 w-6 rounded-full bg-muted border border-border flex items-center justify-center text-xs font-bold text-muted-foreground mt-0.5">
                       {n}
                     </span>
                     <p className="text-xs text-muted-foreground leading-relaxed">{text}</p>
@@ -629,9 +616,11 @@ export function PersonalityGuide({ dominant }: Props) {
             </div>
 
             <div className="rounded-lg bg-muted/50 border border-border px-4 py-3 text-xs text-muted-foreground">
-              <strong>Resources for Further Study:</strong> <em>Personality Plus</em> by Florence Littauer (Fleming H. Revell Co) ·
-              <em> Your Personality Tree</em> by Florence Littauer · <em>Freeing Your Mind from Memories that Bind</em>
-              by Fred &amp; Florence Littauer · <em>Put Power in Your Personality</em> by Florence Littauer (Fleming H. Revell Co)
+              <strong className="text-foreground">Resources for Further Study:</strong>{' '}
+              <em>Personality Plus</em> by Florence Littauer (Fleming H. Revell Co) ·{' '}
+              <em>Your Personality Tree</em> by Florence Littauer ·{' '}
+              <em>Freeing Your Mind from Memories that Bind</em> by Fred &amp; Florence Littauer ·{' '}
+              <em>Put Power in Your Personality</em> by Florence Littauer (Fleming H. Revell Co)
             </div>
 
           </div>

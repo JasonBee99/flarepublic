@@ -6,11 +6,11 @@ import React from 'react'
 import Link from 'next/link'
 import { Brain, Download, BookOpen, RotateCcw, ExternalLink } from 'lucide-react'
 
-const TYPE_INFO: Record<string, { label: string; sub: string; color: string; bg: string }> = {
-  S: { label: 'Sanguine',    sub: 'Popular',  color: 'text-orange-600', bg: 'bg-orange-100' },
-  C: { label: 'Choleric',    sub: 'Powerful', color: 'text-blue-600',   bg: 'bg-blue-100'   },
-  M: { label: 'Melancholy',  sub: 'Perfect',  color: 'text-violet-600', bg: 'bg-violet-100' },
-  P: { label: 'Phlegmatic',  sub: 'Peaceful', color: 'text-emerald-600',bg: 'bg-emerald-100'},
+const TYPE_INFO: Record<string, { label: string; sub: string; color: string; bg: string; bar: string }> = {
+  S: { label: 'Sanguine',    sub: 'Popular',  color: 'text-foreground', bg: 'bg-muted', bar: 'bg-orange-400' },
+  C: { label: 'Choleric',    sub: 'Powerful', color: 'text-foreground', bg: 'bg-muted', bar: 'bg-blue-500'   },
+  M: { label: 'Melancholy',  sub: 'Perfect',  color: 'text-foreground', bg: 'bg-muted', bar: 'bg-violet-500' },
+  P: { label: 'Phlegmatic',  sub: 'Peaceful', color: 'text-foreground', bg: 'bg-muted', bar: 'bg-emerald-500'},
 }
 
 interface Props {
@@ -102,7 +102,7 @@ export function PersonalityCard({ result }: Props) {
                   <span className="text-xs text-muted-foreground">{label}</span>
                   <div className="h-1.5 rounded-full bg-muted overflow-hidden">
                     <div
-                      className={`h-full rounded-full ${info.bg.replace('bg-', 'bg-').replace('100', '400')}`}
+                      className={`h-full rounded-full ${info.bar}`}
                       style={{ width: `${pct}%` }}
                     />
                   </div>
