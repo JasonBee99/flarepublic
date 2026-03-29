@@ -404,12 +404,42 @@ export default function PersonalityTest() {
   const [memM, setMemM] = useState('')
   const [memP, setMemP] = useState('')
 
-  // Open on results tab if ?tab=results is in the URL (e.g. from member dashboard link)
+  // On mount: if ?tab=results, switch to results tab and load saved scores from DB
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
-    if (params.get('tab') === 'results') {
-      setTab('results')
-    }
+    if (params.get('tab') !== 'results') return
+    setTab('results')
+
+    // Fetch saved personality result for the logged-in user and populate myScores
+    ;(async () => {
+      try {
+        const meRes = await fetch('/api/users/me', { credentials: 'include' })
+        const meData = await meRes.json()
+        const userId = meData?.user?.id
+        if (!userId) return
+
+        const res = await fetch(
+          `/api/personality-results?where[user][equals]=${userId}&limit=1`,
+          { credentials: 'include' }
+        )
+        const data = await res.json()
+        const record = data?.docs?.[0]
+        if (!record) return
+
+        // DB stores grand totals per type (not str/wk split).
+        // Reconstruct Scores — the str/wk split is cosmetic display only.
+        const half = (n: number) => Math.round(n / 2)
+        setMyScores({
+          S: { str: half(record.sanguine),   wk: record.sanguine   - half(record.sanguine)   },
+          C: { str: half(record.choleric),   wk: record.choleric   - half(record.choleric)   },
+          M: { str: half(record.melancholy), wk: record.melancholy - half(record.melancholy) },
+          P: { str: half(record.phlegmatic), wk: record.phlegmatic - half(record.phlegmatic) },
+        })
+        setSaved(true)
+      } catch (err) {
+        console.error('Failed to load saved personality result:', err)
+      }
+    })()
   }, [])
 
   const count = Object.keys(selections).length
