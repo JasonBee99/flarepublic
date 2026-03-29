@@ -20,7 +20,7 @@ async function getCurrentUser() {
   if (!token) return null
   const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL ?? 'http://localhost:3000'
   try {
-    const res = await fetch(`${baseUrl}/api/users/me`, {
+    const res = await fetch(`${baseUrl}/api/users/me?depth=2`, {
       headers: { Authorization: `JWT ${token}` },
       next: { revalidate: 0 },
     })
@@ -52,12 +52,17 @@ export default async function MemberPage({
 
     // County lookup (only if user has a county)
     if (user.county) {
-      const countyId = typeof user.county === 'object' ? user.county.id : user.county
+      const countyId = typeof user.county === 'object' ? (user.county as any).id : user.county
       try {
         const county = await payload.findByID({ collection: 'counties', id: countyId })
         countySlug = (county as any)?.slug ?? null
         countyName = (county as any)?.name ?? null
       } catch { }
+      // Fallback: if county is already populated as object with a name
+      if (!countyName && typeof user.county === 'object' && (user.county as any).name) {
+        countyName = (user.county as any).name
+        countySlug = (user.county as any).slug ?? null
+      }
     }
 
     // Learning progress — available to all approved users + admins
@@ -219,12 +224,6 @@ export default async function MemberPage({
           </div>
         </div>
       )}
-
-      <div className="mt-10 border-t border-border pt-6">
-        <Link href="/logout" className="text-sm text-muted-foreground hover:text-foreground hover:underline">
-          Sign out
-        </Link>
-      </div>
     </main>
   )
 }
