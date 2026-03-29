@@ -410,7 +410,7 @@ export default function PersonalityTest() {
   }, [])
 
   const resetTest = useCallback(() => {
-    setSelections({}})
+    setSelections({})
   }, [])
 
   const submitTest = useCallback(async () => {
