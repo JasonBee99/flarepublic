@@ -163,6 +163,13 @@ export default async function CountyPage({ params, searchParams }: Props) {
               Organizer Dashboard
             </Link>
           )}
+          <Link
+            href={`/county/${slug}/focus-groups`}
+            className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-4 py-2 text-sm font-semibold hover:border-primary/40 transition"
+          >
+            <Users className="h-4 w-4" />
+            Focus Groups
+          </Link>
         </div>
       </div>
 

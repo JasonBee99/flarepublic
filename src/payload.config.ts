@@ -23,6 +23,8 @@ import { Courses } from './collections/Courses'
 import { Lessons } from './collections/Lessons'
 import { UserProgress } from './collections/UserProgress'
 import { PersonalityResults } from './collections/PersonalityResults'
+import { FocusGroups } from './collections/FocusGroups'
+import { FocusGroupMembers } from './collections/FocusGroupMembers'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
 import { MainNav } from './globals/MainNav'
@@ -75,7 +77,7 @@ export default buildConfig({
   db: mongooseAdapter({
     url: process.env.DATABASE_URL || '',
   }),
-  collections: [Pages, Posts, Media, Categories, Users, Documents, DocumentCategories, FileTypes, Contacts, Counties, Roles, ForumCategories, ForumThreads, ForumReplies, CountyPosts, Courses, Lessons, UserProgress, PersonalityResults],
+  collections: [Pages, Posts, Media, Categories, Users, Documents, DocumentCategories, FileTypes, Contacts, Counties, Roles, ForumCategories, ForumThreads, ForumReplies, CountyPosts, Courses, Lessons, UserProgress, PersonalityResults, FocusGroups, FocusGroupMembers],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer, MainNav],
   plugins,
