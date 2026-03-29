@@ -7,6 +7,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
+import { PersonalityCard } from '@/components/PersonalityCard'
 
 export const metadata: Metadata = {
   title: 'Member Area | FlaRepublic',
@@ -76,7 +77,7 @@ export default async function MemberPage({
       learningStats.total = allLessons.totalDocs
       learningStats.completed = completedLessons.totalDocs
       learningStats.nextCourse = courses.docs[0] ?? null
-      ;(learningStats as any).hasPersonalityResult = personalityResult.totalDocs > 0
+      ;(learningStats as any).personalityResult = personalityResult.docs[0] ?? null
     } catch { }
   }
 
@@ -175,15 +176,6 @@ export default async function MemberPage({
                 description="Manage users, posts, counties, and forum content."
               />
             )}
-            {!(learningStats as any).hasPersonalityResult && (
-              <MemberCard
-                href="/resources/personality-profile"
-                icon="🧠"
-                title="Personality Profile"
-                description="Take the optional personality test — helps your County Organizer place you in the right Focus Group."
-                highlight
-              />
-            )}
           </div>
 
           {/* Learning progress */}
@@ -222,6 +214,10 @@ export default async function MemberPage({
               </>
             )}
           </div>
+
+          {/* Personality Profile */}
+          <PersonalityCard result={(learningStats as any).personalityResult ?? null} />
+
         </div>
       )}
     </main>
