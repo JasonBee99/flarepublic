@@ -44,11 +44,19 @@ export default async function CountyDashboardsPage() {
   const countiesResult = await payload.find({
     collection: 'counties',
     where: { isActive: { equals: true } },
-    sort: 'displayOrder',
-    limit: 100,
+    sort: 'name',
+    limit: 200,
   })
 
-  const counties = countiesResult.docs
+  // Deduplicate by slug and exclude non-county placeholder records
+  const EXCLUDE = new Set(['other', 'statewide'])
+  const seen = new Set<string>()
+  const counties = countiesResult.docs.filter((c: any) => {
+    const key = c.slug ?? c.name?.toLowerCase()
+    if (!key || EXCLUDE.has(key) || seen.has(key)) return false
+    seen.add(key)
+    return true
+  })
 
   return (
     <main className="container mx-auto max-w-4xl px-4 py-12">
