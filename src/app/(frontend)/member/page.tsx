@@ -47,16 +47,20 @@ export default async function MemberPage({
   let countyName: string | null = null
   let learningStats: { completed: number; total: number; nextCourse: any } = { completed: 0, total: 0, nextCourse: null }
 
-  if (user.county && user.approved) {
+  if (user.approved || user.role === 'siteAdmin') {
     const payload = await getPayload({ config: configPromise })
-    const countyId = typeof user.county === 'object' ? user.county.id : user.county
-    try {
-      const county = await payload.findByID({ collection: 'counties', id: countyId })
-      countySlug = (county as any)?.slug ?? null
-      countyName = (county as any)?.name ?? null
-    } catch { }
 
-    // Learning progress
+    // County lookup (only if user has a county)
+    if (user.county) {
+      const countyId = typeof user.county === 'object' ? user.county.id : user.county
+      try {
+        const county = await payload.findByID({ collection: 'counties', id: countyId })
+        countySlug = (county as any)?.slug ?? null
+        countyName = (county as any)?.name ?? null
+      } catch { }
+    }
+
+    // Learning progress — available to all approved users + admins
     try {
       const [allLessons, completedLessons, courses] = await Promise.all([
         payload.find({ collection: 'lessons', where: { isActive: { equals: true } }, limit: 0 }),
@@ -65,7 +69,6 @@ export default async function MemberPage({
       ])
       learningStats.total = allLessons.totalDocs
       learningStats.completed = completedLessons.totalDocs
-      // Find first course not fully completed
       learningStats.nextCourse = courses.docs[0] ?? null
     } catch { }
   }
