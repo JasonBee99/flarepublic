@@ -45,6 +45,7 @@ export default async function MemberPage({
   // Resolve county slug for the county page link
   let countySlug: string | null = null
   let countyName: string | null = null
+  let learningStats: { completed: number; total: number; nextCourse: any } = { completed: 0, total: 0, nextCourse: null }
 
   if (user.county && user.approved) {
     const payload = await getPayload({ config: configPromise })
@@ -53,9 +54,20 @@ export default async function MemberPage({
       const county = await payload.findByID({ collection: 'counties', id: countyId })
       countySlug = (county as any)?.slug ?? null
       countyName = (county as any)?.name ?? null
-    } catch {
-      // county not found — no link shown
-    }
+    } catch { }
+
+    // Learning progress
+    try {
+      const [allLessons, completedLessons, courses] = await Promise.all([
+        payload.find({ collection: 'lessons', where: { isActive: { equals: true } }, limit: 0 }),
+        payload.find({ collection: 'user-progress', where: { user: { equals: user.id } }, limit: 0 }),
+        payload.find({ collection: 'courses', where: { isActive: { equals: true } }, sort: 'order', limit: 5 }),
+      ])
+      learningStats.total = allLessons.totalDocs
+      learningStats.completed = completedLessons.totalDocs
+      // Find first course not fully completed
+      learningStats.nextCourse = courses.docs[0] ?? null
+    } catch { }
   }
 
   return (
@@ -152,6 +164,43 @@ export default async function MemberPage({
                 title="Admin Panel"
                 description="Manage users, posts, counties, and forum content."
               />
+            )}
+          </div>
+
+          {/* Learning progress */}
+          <div className="rounded-lg border border-border bg-card p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold">Training Progress</h2>
+              <Link href="/learn/courses" className="text-sm text-primary hover:underline">
+                View all courses →
+              </Link>
+            </div>
+            {learningStats.total === 0 ? (
+              <p className="text-sm text-muted-foreground">
+                No courses available yet.{' '}
+                <Link href="/learn/courses" className="text-primary hover:underline">Check back soon →</Link>
+              </p>
+            ) : (
+              <>
+                <div className="mb-2 flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">Lessons completed</span>
+                  <span className="font-medium">{learningStats.completed} / {learningStats.total}</span>
+                </div>
+                <div className="h-2 w-full rounded-full bg-muted overflow-hidden mb-4">
+                  <div
+                    className="h-full rounded-full bg-primary transition-all"
+                    style={{ width: `${learningStats.total > 0 ? Math.round((learningStats.completed / learningStats.total) * 100) : 0}%` }}
+                  />
+                </div>
+                {learningStats.nextCourse && (
+                  <Link
+                    href={`/learn/courses/${(learningStats.nextCourse as any).slug}`}
+                    className="inline-flex items-center gap-2 rounded-md border border-border bg-background px-4 py-2 text-sm font-medium hover:border-primary/40 transition"
+                  >
+                    📚 {(learningStats.nextCourse as any).title} →
+                  </Link>
+                )}
+              </>
             )}
           </div>
         </div>
