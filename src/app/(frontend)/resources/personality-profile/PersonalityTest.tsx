@@ -431,6 +431,7 @@ export default function PersonalityTest() {
       const meRes = await fetch('/api/users/me', { credentials: 'include' })
       const meData = await meRes.json()
       const user = meData?.user
+      console.log('me response:', meRes.status, user?.id)
       if (user?.id) {
         const totals = {
           S: sc.S.str + sc.S.wk,
@@ -441,10 +442,10 @@ export default function PersonalityTest() {
         const dominant = (Object.entries(totals).sort((a, b) => b[1] - a[1])[0][0]) as TypeKey
         const countyId = typeof user.county === 'object' ? user.county?.id : user.county
 
-        // Check if result already exists (update) or create new
         const existingRes = await fetch(`/api/personality-results?where[user][equals]=${user.id}&limit=1`, { credentials: 'include' })
         const existingData = await existingRes.json()
         const existing = existingData?.docs?.[0]
+        console.log('existing result:', existing?.id ?? 'none')
 
         const body: Record<string, unknown> = {
           user: user.id,
@@ -457,25 +458,31 @@ export default function PersonalityTest() {
         }
         if (countyId) body.county = countyId
 
+        let saveRes: Response
         if (existing) {
-          await fetch(`/api/personality-results/${existing.id}`, {
+          saveRes = await fetch(`/api/personality-results/${existing.id}`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
             body: JSON.stringify(body),
           })
         } else {
-          await fetch('/api/personality-results', {
+          saveRes = await fetch('/api/personality-results', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
             body: JSON.stringify(body),
           })
         }
-        setSaved(true)
+        const saveData = await saveRes.json()
+        console.log('save response:', saveRes.status, saveData)
+        if (saveRes.ok) setSaved(true)
+        else console.error('Save failed:', saveData)
+      } else {
+        console.log('No user logged in — skipping save')
       }
-    } catch {
-      // Silent — test still works even if save fails
+    } catch (err) {
+      console.error('Personality save error:', err)
     }
   }, [count, selections])
 
