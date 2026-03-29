@@ -82,6 +82,9 @@ export interface Config {
     'forum-threads': ForumThread;
     'forum-replies': ForumReply;
     'county-posts': CountyPost;
+    courses: Course;
+    lessons: Lesson;
+    'user-progress': UserProgressRecord;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -114,6 +117,9 @@ export interface Config {
     'forum-threads': ForumThreadsSelect<false> | ForumThreadsSelect<true>;
     'forum-replies': ForumRepliesSelect<false> | ForumRepliesSelect<true>;
     'county-posts': CountyPostsSelect<false> | CountyPostsSelect<true>;
+    courses: CoursesSelect<false> | CoursesSelect<true>;
+    lessons: LessonsSelect<false> | LessonsSelect<true>;
+    'user-progress': UserProgressSelect<false> | UserProgressSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -1096,6 +1102,77 @@ export interface CountyPost {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "courses".
+ */
+export interface Course {
+  id: string;
+  title: string;
+  slug: string;
+  description?: string | null;
+  stage?: ('inactive' | 'stage1' | 'stage2' | 'stage3' | 'all') | null;
+  order?: number | null;
+  estimatedMinutes?: number | null;
+  isActive?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "lessons".
+ */
+export interface Lesson {
+  id: string;
+  title: string;
+  course: string | Course;
+  order: number;
+  type: 'richtext' | 'pdf' | 'video';
+  estimatedMinutes?: number | null;
+  isActive?: boolean | null;
+  content?: {
+    root: {
+      type: string;
+      children: { type: any; version: number; [k: string]: unknown }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  pdfUrl?: string | null;
+  pdfFile?: (string | null) | Media;
+  videoUrl?: string | null;
+  videoCaption?: string | null;
+  notes?: {
+    root: {
+      type: string;
+      children: { type: any; version: number; [k: string]: unknown }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "user-progress".
+ */
+export interface UserProgressRecord {
+  id: string;
+  user: string | User;
+  lesson: string | Lesson;
+  course: string | Course;
+  county?: (string | null) | County;
+  completedAt: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1839,6 +1916,42 @@ export interface CountyPostsSelect<T extends boolean = true> {
   excerpt?: T;
   heroImage?: T;
   content?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+export interface CoursesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  description?: T;
+  stage?: T;
+  order?: T;
+  estimatedMinutes?: T;
+  isActive?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+export interface LessonsSelect<T extends boolean = true> {
+  title?: T;
+  course?: T;
+  order?: T;
+  type?: T;
+  estimatedMinutes?: T;
+  isActive?: T;
+  content?: T;
+  pdfUrl?: T;
+  pdfFile?: T;
+  videoUrl?: T;
+  videoCaption?: T;
+  notes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+export interface UserProgressSelect<T extends boolean = true> {
+  user?: T;
+  lesson?: T;
+  course?: T;
+  county?: T;
+  completedAt?: T;
   updatedAt?: T;
   createdAt?: T;
 }
