@@ -176,6 +176,14 @@ export default async function MemberPage({
                 description="Manage users, posts, counties, and forum content."
               />
             )}
+            {user.role === 'siteAdmin' && (
+              <MemberCard
+                href="/county-dashboards"
+                icon="🗂️"
+                title="County Dashboards"
+                description="View organizer dashboards for any Florida county."
+              />
+            )}
           </div>
 
           {/* Learning progress */}
