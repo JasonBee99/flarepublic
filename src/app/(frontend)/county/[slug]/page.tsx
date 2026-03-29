@@ -8,7 +8,7 @@ import { redirect, notFound } from 'next/navigation'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import Link from 'next/link'
-import { ChevronRight, PenSquare, MessageSquare, Calendar, AlertCircle } from 'lucide-react'
+import { ChevronRight, PenSquare, MessageSquare, Calendar, AlertCircle, Users } from 'lucide-react'
 import { ForumRichText } from '@/components/ForumRichText'
 
 export const dynamic = 'force-dynamic'
@@ -152,6 +152,15 @@ export default async function CountyPage({ params, searchParams }: Props) {
             >
               <MessageSquare className="h-4 w-4" />
               County Forum
+            </Link>
+          )}
+          {(user.role === 'countyOrganizer' || user.role === 'siteAdmin') && (
+            <Link
+              href={`/county/${slug}/dashboard`}
+              className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-4 py-2 text-sm font-semibold hover:border-primary/40 transition"
+            >
+              <Users className="h-4 w-4" />
+              Organizer Dashboard
             </Link>
           )}
         </div>
