@@ -451,7 +451,7 @@ function TraitTable({
                 className={`px-3 py-1.5 text-xs border-t border-border/50 ${
                   isDom
                     ? `${style.colBg} font-medium text-foreground border-l-2 border-r-2 ${style.colBorder}`
-                    : 'text-muted-foreground bg-background'
+                    : 'text-foreground/70 bg-background'
                 }`}
               >
                 {trait ?? ''}

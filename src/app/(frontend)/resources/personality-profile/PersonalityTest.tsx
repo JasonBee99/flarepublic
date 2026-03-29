@@ -612,7 +612,7 @@ export default function PersonalityTest() {
     const domInfo = TYPE_INFO[dom]
 
     return (
-      <div ref={resultsRef}>
+      <div ref={resultsRef} className="scroll-mt-24">
         {/* Score cards */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
           {(['S', 'C', 'M', 'P'] as TypeKey[]).map(t => {
