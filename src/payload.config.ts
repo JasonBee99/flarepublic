@@ -22,6 +22,7 @@ import { CountyPosts } from './collections/CountyPosts'
 import { Courses } from './collections/Courses'
 import { Lessons } from './collections/Lessons'
 import { UserProgress } from './collections/UserProgress'
+import { PersonalityResults } from './collections/PersonalityResults'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
 import { MainNav } from './globals/MainNav'
@@ -74,7 +75,7 @@ export default buildConfig({
   db: mongooseAdapter({
     url: process.env.DATABASE_URL || '',
   }),
-  collections: [Pages, Posts, Media, Categories, Users, Documents, DocumentCategories, FileTypes, Contacts, Counties, Roles, ForumCategories, ForumThreads, ForumReplies, CountyPosts, Courses, Lessons, UserProgress],
+  collections: [Pages, Posts, Media, Categories, Users, Documents, DocumentCategories, FileTypes, Contacts, Counties, Roles, ForumCategories, ForumThreads, ForumReplies, CountyPosts, Courses, Lessons, UserProgress, PersonalityResults],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer, MainNav],
   plugins,

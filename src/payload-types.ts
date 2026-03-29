@@ -85,6 +85,7 @@ export interface Config {
     courses: Course;
     lessons: Lesson;
     'user-progress': UserProgressRecord;
+    'personality-results': PersonalityResult;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -120,6 +121,7 @@ export interface Config {
     courses: CoursesSelect<false> | CoursesSelect<true>;
     lessons: LessonsSelect<false> | LessonsSelect<true>;
     'user-progress': UserProgressSelect<false> | UserProgressSelect<true>;
+    'personality-results': PersonalityResultsSelect<false> | PersonalityResultsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -1170,6 +1172,37 @@ export interface UserProgressRecord {
   completedAt: string;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "personality-results".
+ */
+export interface PersonalityResult {
+  id: string;
+  user: string | User;
+  county?: (string | null) | County;
+  sanguine: number;
+  choleric: number;
+  melancholy: number;
+  phlegmatic: number;
+  dominantType: 'S' | 'C' | 'M' | 'P';
+  completedAt: string;
+  organizerNote?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+export interface PersonalityResultsSelect<T extends boolean = true> {
+  user?: T;
+  county?: T;
+  sanguine?: T;
+  choleric?: T;
+  melancholy?: T;
+  phlegmatic?: T;
+  dominantType?: T;
+  completedAt?: T;
+  organizerNote?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

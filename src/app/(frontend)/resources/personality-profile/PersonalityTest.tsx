@@ -393,6 +393,7 @@ export default function PersonalityTest() {
   const [myScores, setMyScores] = useState<Scores | null>(null)
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([])
   const [copied, setCopied] = useState(false)
+  const [saved, setSaved] = useState(false)
 
   // Team form state
   const [memName, setMemName] = useState('')
@@ -409,10 +410,10 @@ export default function PersonalityTest() {
   }, [])
 
   const resetTest = useCallback(() => {
-    setSelections({})
+    setSelections({}})
   }, [])
 
-  const submitTest = useCallback(() => {
+  const submitTest = useCallback(async () => {
     if (count < 40) {
       alert(`Please complete all 40 rows first. (${count}/40 done)`)
       return
@@ -424,6 +425,56 @@ export default function PersonalityTest() {
     })
     setMyScores(sc)
     setTab('results')
+
+    // Save to database if logged in
+    try {
+      const meRes = await fetch('/api/users/me')
+      const meData = await meRes.json()
+      const user = meData?.user
+      if (user?.id) {
+        const totals = {
+          S: sc.S.str + sc.S.wk,
+          C: sc.C.str + sc.C.wk,
+          M: sc.M.str + sc.M.wk,
+          P: sc.P.str + sc.P.wk,
+        }
+        const dominant = (Object.entries(totals).sort((a, b) => b[1] - a[1])[0][0]) as TypeKey
+        const countyId = typeof user.county === 'object' ? user.county?.id : user.county
+
+        // Check if result already exists (update) or create new
+        const existingRes = await fetch(`/api/personality-results?where[user][equals]=${user.id}&limit=1`)
+        const existingData = await existingRes.json()
+        const existing = existingData?.docs?.[0]
+
+        const body: Record<string, unknown> = {
+          user: user.id,
+          sanguine: totals.S,
+          choleric: totals.C,
+          melancholy: totals.M,
+          phlegmatic: totals.P,
+          dominantType: dominant,
+          completedAt: new Date().toISOString(),
+        }
+        if (countyId) body.county = countyId
+
+        if (existing) {
+          await fetch(`/api/personality-results/${existing.id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+          })
+        } else {
+          await fetch('/api/personality-results', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+          })
+        }
+        setSaved(true)
+      }
+    } catch {
+      // Silent — test still works even if save fails
+    }
   }, [count, selections])
 
   const copyReport = useCallback(async () => {
@@ -584,7 +635,12 @@ export default function PersonalityTest() {
         </div>
 
         {/* Actions */}
-        <div className="flex gap-3 flex-wrap">
+        <div className="flex gap-3 flex-wrap items-center">
+          {saved && (
+            <span className="inline-flex items-center gap-1.5 text-sm text-green-600 dark:text-green-400 font-medium">
+              <Check className="h-4 w-4" /> Results saved to your profile
+            </span>
+          )}
           <button onClick={copyReport} className="inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2.5 text-sm font-medium hover:bg-accent transition-colors">
             {copied ? <Check className="h-4 w-4 text-green-600" /> : <Copy className="h-4 w-4" />}
             {copied ? 'Copied!' : 'Copy report'}

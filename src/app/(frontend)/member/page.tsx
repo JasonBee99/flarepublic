@@ -62,14 +62,16 @@ export default async function MemberPage({
 
     // Learning progress — available to all approved users + admins
     try {
-      const [allLessons, completedLessons, courses] = await Promise.all([
+      const [allLessons, completedLessons, courses, personalityResult] = await Promise.all([
         payload.find({ collection: 'lessons', where: { isActive: { equals: true } }, limit: 0 }),
         payload.find({ collection: 'user-progress', where: { user: { equals: user.id } }, limit: 0 }),
         payload.find({ collection: 'courses', where: { isActive: { equals: true } }, sort: 'order', limit: 5 }),
+        payload.find({ collection: 'personality-results', where: { user: { equals: user.id } }, limit: 1 }),
       ])
       learningStats.total = allLessons.totalDocs
       learningStats.completed = completedLessons.totalDocs
       learningStats.nextCourse = courses.docs[0] ?? null
+      ;(learningStats as any).hasPersonalityResult = personalityResult.totalDocs > 0
     } catch { }
   }
 
@@ -166,6 +168,15 @@ export default async function MemberPage({
                 icon="⚙️"
                 title="Admin Panel"
                 description="Manage users, posts, counties, and forum content."
+              />
+            )}
+            {!(learningStats as any).hasPersonalityResult && (
+              <MemberCard
+                href="/resources/personality-profile"
+                icon="🧠"
+                title="Personality Profile"
+                description="Take the optional personality test — helps your County Organizer place you in the right Focus Group."
+                highlight
               />
             )}
           </div>
