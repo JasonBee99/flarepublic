@@ -547,9 +547,9 @@ export default function PersonalityTest() {
         {(['S', 'C', 'M', 'P'] as TypeKey[]).map(t => {
           const info = TYPE_INFO[t]
           return (
-            <div key={t} className={`rounded-lg px-3 py-2 text-center ${info.bg}`}>
-              <p className={`text-xs font-semibold ${info.text}`}>{info.label}</p>
-              <p className={`text-xs ${info.text} opacity-70`}>{info.sub}</p>
+            <div key={t} className="rounded-lg px-3 py-2 text-center bg-muted">
+              <p className="text-xs font-semibold text-foreground">{info.label}</p>
+              <p className="text-xs text-muted-foreground">{info.sub}</p>
             </div>
           )
         })}
@@ -633,11 +633,11 @@ export default function PersonalityTest() {
         </div>
 
         {/* Leader profile */}
-        <div className={`rounded-xl border-2 p-6 mb-6 ${domInfo.bg}`} style={{ borderColor: domInfo.accent + '40' }}>
+        <div className="rounded-xl border-2 p-6 mb-6 bg-muted" style={{ borderColor: domInfo.accent + '40' }}>
           <h2 className="text-xl font-bold text-foreground mb-2">{L.title}</h2>
           <div className="flex flex-wrap gap-1.5 mb-4">
             {L.tags.map(tag => (
-              <span key={tag} className={`text-xs font-medium px-2.5 py-1 rounded-full ${domInfo.bg} ${domInfo.text} border border-current/20`}>{tag}</span>
+              <span key={tag} className="text-xs font-medium px-2.5 py-1 rounded-full bg-background text-foreground border border-border">{tag}</span>
             ))}
           </div>
           <p className="text-sm text-foreground/80 leading-relaxed mb-5">{L.summary}</p>
@@ -747,7 +747,7 @@ export default function PersonalityTest() {
                 return (
                   <div key={i} className="rounded-xl border border-border bg-background p-4">
                     <div className="flex items-center gap-3 mb-3">
-                      <div className={`h-9 w-9 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${info.bg} ${info.text}`}>
+                      <div className="h-9 w-9 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 bg-muted text-foreground">
                         {getInitials(m.name)}
                       </div>
                       <div className="flex-1 min-w-0">
