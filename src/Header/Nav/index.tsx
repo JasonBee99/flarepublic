@@ -9,7 +9,7 @@ import { cn } from '@/utilities/cn'
 
 interface NavProps {
   groups: NavGroup[]
-  user?: { name?: string; approved?: boolean } | null
+  user?: { id?: string; name?: string; approved?: boolean; role?: string } | null
 }
 
 function isVisible(
@@ -105,6 +105,8 @@ export function Nav({ groups, user }: NavProps) {
         if (group.type === 'link') {
           const isActive = pathname === group.url
           const isRegister = group.url === '/register'
+          // Hide Register and Login links when user is logged in
+          if (user && (group.url === '/register' || group.url === '/login')) return null
           return (
             <Link
               key={group.label}
@@ -126,6 +128,28 @@ export function Nav({ groups, user }: NavProps) {
           <DropdownGroup key={group.label} group={group} pathname={pathname} user={user} />
         )
       })}
+
+      {/* Auth links — shown when logged in */}
+      {user && (
+        <>
+          <Link
+            href="/member"
+            className={cn(
+              'inline-flex items-center rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
+              'text-foreground/80 hover:text-foreground hover:bg-accent',
+              pathname === '/member' && 'text-primary bg-primary/10',
+            )}
+          >
+            My Area
+          </Link>
+          <Link
+            href="/logout"
+            className="inline-flex items-center rounded-md px-3 py-1.5 text-sm font-medium text-foreground/60 hover:text-foreground hover:bg-accent transition-colors"
+          >
+            Sign out
+          </Link>
+        </>
+      )}
     </div>
   )
 }

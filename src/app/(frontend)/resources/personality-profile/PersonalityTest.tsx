@@ -428,7 +428,7 @@ export default function PersonalityTest() {
 
     // Save to database if logged in
     try {
-      const meRes = await fetch('/api/users/me')
+      const meRes = await fetch('/api/users/me', { credentials: 'include' })
       const meData = await meRes.json()
       const user = meData?.user
       if (user?.id) {
@@ -442,7 +442,7 @@ export default function PersonalityTest() {
         const countyId = typeof user.county === 'object' ? user.county?.id : user.county
 
         // Check if result already exists (update) or create new
-        const existingRes = await fetch(`/api/personality-results?where[user][equals]=${user.id}&limit=1`)
+        const existingRes = await fetch(`/api/personality-results?where[user][equals]=${user.id}&limit=1`, { credentials: 'include' })
         const existingData = await existingRes.json()
         const existing = existingData?.docs?.[0]
 
@@ -461,12 +461,14 @@ export default function PersonalityTest() {
           await fetch(`/api/personality-results/${existing.id}`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
             body: JSON.stringify(body),
           })
         } else {
           await fetch('/api/personality-results', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
             body: JSON.stringify(body),
           })
         }

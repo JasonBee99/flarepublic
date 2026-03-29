@@ -39,7 +39,7 @@ export function LessonCompleteButton({
       if (countyId) body.county = countyId
 
       // Need to get the current user id — fetch from /api/users/me
-      const meRes = await fetch('/api/users/me')
+      const meRes = await fetch('/api/users/me', { credentials: 'include' })
       const meData = await meRes.json()
       const userId = meData?.user?.id
       if (userId) body.user = userId
@@ -47,6 +47,7 @@ export function LessonCompleteButton({
       const res = await fetch('/api/user-progress', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(body),
       })
 
