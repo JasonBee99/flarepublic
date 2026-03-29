@@ -389,6 +389,7 @@ function ScoreBar({ pct, barClass }: { pct: number; barClass: string }) {
 // ── Main Component ────────────────────────────────────────────────────────────
 
 export default function PersonalityTest() {
+  const resultsRef = React.useRef<HTMLDivElement>(null)
   const [tab, setTab] = useState<Tab>('test')
   const [selections, setSelections] = useState<Record<number, TypeKey>>({})
   const [myScores, setMyScores] = useState<Scores | null>(null)
@@ -434,6 +435,7 @@ export default function PersonalityTest() {
     })
     setMyScores(sc)
     setTab('results')
+    setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50)
 
     // Save to database if logged in
     try {
@@ -610,7 +612,7 @@ export default function PersonalityTest() {
     const domInfo = TYPE_INFO[dom]
 
     return (
-      <div>
+      <div ref={resultsRef}>
         {/* Score cards */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
           {(['S', 'C', 'M', 'P'] as TypeKey[]).map(t => {
