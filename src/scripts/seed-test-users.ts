@@ -45,7 +45,7 @@ async function main() {
 
   // ── Create or find a test focus group ─────────────────────────────────────
   const existingGroup = await payload.find({
-    collection: 'focus-groups' as any,
+    collection: 'focus-groups',
     where: {
       and: [
         { county: { equals: county.id } },
@@ -59,7 +59,7 @@ async function main() {
   let focusGroup = existingGroup.docs[0]
   if (!focusGroup) {
     focusGroup = await payload.create({
-      collection: 'focus-groups' as any,
+      collection: 'focus-groups',
       data: {
         title: 'Test Focus Group Alpha',
         county: county.id,
@@ -80,7 +80,7 @@ async function main() {
 
   // Count existing active members in this group
   const existingMemberships = await payload.find({
-    collection: 'focus-group-members' as any,
+    collection: 'focus-group-members',
     where: {
       and: [
         { focusGroup: { equals: focusGroup.id } },
@@ -180,7 +180,7 @@ async function main() {
 
     // ── Focus group membership ───────────────────────────────────────────────
     const existingMembership = await payload.find({
-      collection: 'focus-group-members' as any,
+      collection: 'focus-group-members',
       where: {
         and: [
           { focusGroup: { equals: focusGroup.id } },
@@ -203,7 +203,7 @@ async function main() {
       if (!isCholeric && status === 'active') activeSlots++
 
       await payload.create({
-        collection: 'focus-group-members' as any,
+        collection: 'focus-group-members',
         data: {
           focusGroup: focusGroup.id,
           user: userId,

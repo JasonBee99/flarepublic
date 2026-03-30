@@ -83,7 +83,7 @@ export default async function SiteDashboardPage() {
       overrideAccess: true,
     }),
     payload.find({
-      collection: 'focus-groups' as any,
+      collection: 'focus-groups',
       where: { isActive: { equals: true } },
       limit: 500,
       depth: 0,

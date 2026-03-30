@@ -66,7 +66,7 @@ export default async function FocusGroupsPage({ params }: Props) {
 
   // Fetch active focus groups for this county
   const groupsResult = await payload.find({
-    collection: 'focus-groups' as any,
+    collection: 'focus-groups',
     where: {
       and: [
         { county: { equals: county.id } },
@@ -81,7 +81,7 @@ export default async function FocusGroupsPage({ params }: Props) {
 
   // Fetch current user's memberships to show join status
   const membershipResult = await payload.find({
-    collection: 'focus-group-members' as any,
+    collection: 'focus-group-members',
     where: { user: { equals: user.id } },
     limit: 100,
     depth: 0,
@@ -95,7 +95,7 @@ export default async function FocusGroupsPage({ params }: Props) {
   // Fetch active member counts per group
   const allMemberships = groups.length
     ? await payload.find({
-        collection: 'focus-group-members' as any,
+        collection: 'focus-group-members',
         where: {
           and: [
             { focusGroup: { in: groups.map((g: any) => g.id) } },

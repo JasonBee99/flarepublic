@@ -86,6 +86,8 @@ export interface Config {
     lessons: Lesson;
     'user-progress': UserProgressRecord;
     'personality-results': PersonalityResult;
+    'focus-groups': any;
+    'focus-group-members': any;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -122,6 +124,8 @@ export interface Config {
     lessons: LessonsSelect<false> | LessonsSelect<true>;
     'user-progress': UserProgressSelect<false> | UserProgressSelect<true>;
     'personality-results': PersonalityResultsSelect<false> | PersonalityResultsSelect<true>;
+    'focus-groups': any;
+    'focus-group-members': any;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
