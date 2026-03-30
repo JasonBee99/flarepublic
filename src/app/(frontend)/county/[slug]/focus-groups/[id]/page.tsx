@@ -61,13 +61,13 @@ export default async function FocusGroupDetailPage({ params }: Props) {
   // Fetch the group
   let group: any
   try {
-    group = await payload.findByID({ collection: 'focus-groups', id, depth: 1 })
+    group = await payload.findByID({ collection: 'focus-groups' as any, id, depth: 1 })
   } catch { return notFound() }
   if (!group || !group.isActive) return notFound()
 
   // Fetch all memberships for this group
   const membershipsResult = await payload.find({
-    collection: 'focus-group-members',
+    collection: 'focus-group-members' as any,
     where: { focusGroup: { equals: id } },
     limit: 200,
     depth: 1,
