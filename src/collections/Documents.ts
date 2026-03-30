@@ -55,6 +55,20 @@ export const Documents: CollectionConfig = {
       },
     },
     {
+      name: 'content',
+      type: 'textarea',
+      admin: {
+        description: 'Article body text (plain text, imported from external source)',
+      },
+    },
+    {
+      name: 'sourceUrl',
+      type: 'text',
+      admin: {
+        description: 'Original source URL this content was imported from',
+      },
+    },
+    {
       name: 'publishedAt',
       type: 'date',
       admin: {

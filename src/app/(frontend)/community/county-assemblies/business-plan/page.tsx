@@ -11,10 +11,10 @@ const CATEGORIES = [
     count: 9,
     baseUrl: 'https://www.flarepublic.us/docs-category/fast-track-to-assemblies/',
     items: [
-      { label: 'Giant Steps To Assemblies', href: 'https://www.flarepublic.us/docs/proposal-giant-steps-to-assemblies/' },
-      { label: 'Article – How Lawful Is The Fast Track?', href: 'https://www.flarepublic.us/docs/article-how-lawful-is-the-fast-track/' },
-      { label: 'Article – Ad Hoc Coach For County Assemblies', href: 'https://www.flarepublic.us/docs/article-ad-hoc-coach-for-county-assemblies/' },
-      { label: 'Article – Getting Two Delegates In An Hour', href: 'https://www.flarepublic.us/docs/article-getting-two-delegates-in-an-hour/' },
+      { label: 'Giant Steps To Assemblies', href: '/community/county-assemblies/docs/proposal-giant-steps-to-assemblies' },
+      { label: 'Article – How Lawful Is The Fast Track?', href: '/community/county-assemblies/docs/article-how-lawful-is-the-fast-track' },
+      { label: 'Article – Ad Hoc Coach For County Assemblies', href: '/community/county-assemblies/docs/article-ad-hoc-coach-for-county-assemblies' },
+      { label: 'Article – Getting Two Delegates In An Hour', href: '/community/county-assemblies/docs/article-getting-two-delegates-in-an-hour' },
     ],
   },
   {
@@ -22,10 +22,10 @@ const CATEGORIES = [
     count: 6,
     baseUrl: 'https://www.flarepublic.us/docs-category/why-break-from-natl-to-use-the-fast-track/',
     items: [
-      { label: 'Article – Why Doesn\'t National Republic Push The Fast Track Method?', href: 'https://www.flarepublic.us/docs/article-why-doesnt-national-republic-push-the-fast-track-method/' },
-      { label: 'PROPOSAL – Reading To County', href: 'https://www.flarepublic.us/docs/reading-to-county/' },
-      { label: 'Article – Laches and Squatter Rights', href: 'https://www.flarepublic.us/docs/laches-squatter-rights/' },
-      { label: 'PROPOSAL – Mergers and Military Softball', href: 'https://www.flarepublic.us/docs/proposal-mergers-and-military-softball/' },
+      { label: 'Article – Why Doesn\'t National Republic Push The Fast Track Method?', href: '/community/county-assemblies/docs/article-why-doesnt-national-republic-push-the-fast-track-method' },
+      { label: 'PROPOSAL – Reading To County', href: '/community/county-assemblies/docs/reading-to-county' },
+      { label: 'Article – Laches and Squatter Rights', href: '/community/county-assemblies/docs/laches-squatter-rights' },
+      { label: 'PROPOSAL – Mergers and Military Softball', href: '/community/county-assemblies/docs/proposal-mergers-and-military-softball' },
     ],
   },
   {
@@ -33,10 +33,10 @@ const CATEGORIES = [
     count: 9,
     baseUrl: 'https://www.flarepublic.us/docs-category/training-for-assembly-and-congress/',
     items: [
-      { label: 'Article – The Future Of County Assemblies', href: 'https://www.flarepublic.us/docs/article-the-future-of-county-assemblies/' },
-      { label: 'PROPOSAL – Maxing Meetings', href: 'https://www.flarepublic.us/docs/proposal-maxing-meetings/' },
-      { label: 'PROPOSAL – One Secretary Server Computer', href: 'https://www.flarepublic.us/docs/proposal-one-secretary-server-computer-proposal-method-part-iii/' },
-      { label: 'PROPOSAL – Electronic Leadership Of The Future Now', href: 'https://www.flarepublic.us/docs/proposal-electronic-leadership-of-the-future-now-proposal-method-part-ii/' },
+      { label: 'Article – The Future Of County Assemblies', href: '/community/county-assemblies/docs/article-the-future-of-county-assemblies' },
+      { label: 'PROPOSAL – Maxing Meetings', href: '/community/county-assemblies/docs/proposal-maxing-meetings' },
+      { label: 'PROPOSAL – One Secretary Server Computer', href: '/community/county-assemblies/docs/proposal-one-secretary-server-computer-proposal-method-part-iii' },
+      { label: 'PROPOSAL – Electronic Leadership Of The Future Now', href: '/community/county-assemblies/docs/proposal-electronic-leadership-of-the-future-now-proposal-method-part-ii' },
     ],
   },
   {
@@ -44,10 +44,10 @@ const CATEGORIES = [
     count: 7,
     baseUrl: 'https://www.flarepublic.us/docs-category/interim-holding-time-period/',
     items: [
-      { label: 'Ad Hoc Board of Directors', href: 'https://www.flarepublic.us/docs/ad-hoc-board-of-directors/' },
-      { label: 'Golden Handcuffs', href: 'https://www.flarepublic.us/docs/golden-handcuffs/' },
-      { label: 'Board Of Directors', href: 'https://www.flarepublic.us/docs/board-of-directors/' },
-      { label: 'Article – What are The County Assembly Goals After Electing Delegates?', href: 'https://www.flarepublic.us/docs/article-what-are-the-county-assembly-goals-after-electing-delegates/' },
+      { label: 'Ad Hoc Board of Directors', href: '/community/county-assemblies/docs/ad-hoc-board-of-directors' },
+      { label: 'Golden Handcuffs', href: '/community/county-assemblies/docs/golden-handcuffs' },
+      { label: 'Board Of Directors', href: '/community/county-assemblies/docs/board-of-directors' },
+      { label: 'Article – What are The County Assembly Goals After Electing Delegates?', href: '/community/county-assemblies/docs/article-what-are-the-county-assembly-goals-after-electing-delegates' },
     ],
   },
   {
@@ -55,10 +55,10 @@ const CATEGORIES = [
     count: 9,
     baseUrl: 'https://www.flarepublic.us/docs-category/creating-the-congresses/',
     items: [
-      { label: 'PROPOSAL – Ratification By The Senate', href: 'https://www.flarepublic.us/docs/ratification-by-the-senate/' },
-      { label: 'PROPOSAL – Ratification of Assemblies', href: 'https://www.flarepublic.us/docs/proposal-ratification-of-assemblies/' },
-      { label: 'PROPOSAL – Manning The Federal Congress', href: 'https://www.flarepublic.us/docs/proposal-manning-the-federal-congress/' },
-      { label: 'PROPOSAL – Manning The Florida Congress', href: 'https://www.flarepublic.us/docs/proposal-manning-the-florida-congress/' },
+      { label: 'PROPOSAL – Ratification By The Senate', href: '/community/county-assemblies/docs/ratification-by-the-senate' },
+      { label: 'PROPOSAL – Ratification of Assemblies', href: '/community/county-assemblies/docs/proposal-ratification-of-assemblies' },
+      { label: 'PROPOSAL – Manning The Federal Congress', href: '/community/county-assemblies/docs/proposal-manning-the-federal-congress' },
+      { label: 'PROPOSAL – Manning The Florida Congress', href: '/community/county-assemblies/docs/proposal-manning-the-florida-congress' },
     ],
   },
   {
@@ -66,8 +66,8 @@ const CATEGORIES = [
     count: 2,
     baseUrl: 'https://www.flarepublic.us/docs-category/training-legal-officers/',
     items: [
-      { label: 'PROPOSAL – Training County Court Clerks', href: 'https://www.flarepublic.us/docs/proposal-training-county-court-clerks/' },
-      { label: 'PROPOSAL – Training Judicial Officers', href: 'https://www.flarepublic.us/docs/proposal-training-judicial-officers/' },
+      { label: 'PROPOSAL – Training County Court Clerks', href: '/community/county-assemblies/docs/proposal-training-county-court-clerks' },
+      { label: 'PROPOSAL – Training Judicial Officers', href: '/community/county-assemblies/docs/proposal-training-judicial-officers' },
     ],
   },
   {
@@ -75,9 +75,9 @@ const CATEGORIES = [
     count: 4,
     baseUrl: 'https://www.flarepublic.us/docs-category/financing-and-investment-opportunities/',
     items: [
-      { label: 'PROPOSAL – HOW TO FINANCE ALL THE REPUBLICS IMMEDIATELY', href: 'https://www.flarepublic.us/docs/proposal-how-to-finance-all-the-republics-immediately/' },
-      { label: 'Business Proposal – Ida\'s Assembly Support', href: 'https://www.flarepublic.us/docs/business-proposal-idas-assembly-support/' },
-      { label: 'PROPOSAL – Creating A Fast Track To Co-Op Villages, Ending Poverty & Homelessness', href: 'https://www.flarepublic.us/docs/proposal-creating-a-fast-track-to-co-op-villages-ending-poverty-homelessness/' },
+      { label: 'PROPOSAL – HOW TO FINANCE ALL THE REPUBLICS IMMEDIATELY', href: '/community/county-assemblies/docs/proposal-how-to-finance-all-the-republics-immediately' },
+      { label: 'Business Proposal – Ida\'s Assembly Support', href: '/community/county-assemblies/docs/business-proposal-idas-assembly-support' },
+      { label: 'PROPOSAL – Creating A Fast Track To Co-Op Villages, Ending Poverty & Homelessness', href: '/community/county-assemblies/docs/proposal-creating-a-fast-track-to-co-op-villages-ending-poverty-homelessness' },
     ],
   },
   {
@@ -85,10 +85,10 @@ const CATEGORIES = [
     count: 9,
     baseUrl: 'https://www.flarepublic.us/docs-category/other/',
     items: [
-      { label: 'PROPOSAL – Returning To The Land', href: 'https://www.flarepublic.us/docs/proposal-returning-to-the-land/' },
-      { label: 'PROPOSAL – LAWYER UP', href: 'https://www.flarepublic.us/docs/proposal-lawyer-up/' },
-      { label: 'Create Corporations for Republic', href: 'https://www.flarepublic.us/docs/create-corporations-for-republic/' },
-      { label: 'Index – Implementation of NW Ord', href: 'https://www.flarepublic.us/docs/index-implementation-of-nw-ord/' },
+      { label: 'PROPOSAL – Returning To The Land', href: '/community/county-assemblies/docs/proposal-returning-to-the-land' },
+      { label: 'PROPOSAL – LAWYER UP', href: '/community/county-assemblies/docs/proposal-lawyer-up' },
+      { label: 'Create Corporations for Republic', href: '/community/county-assemblies/docs/create-corporations-for-republic' },
+      { label: 'Index – Implementation of NW Ord', href: '/community/county-assemblies/docs/index-implementation-of-nw-ord' },
     ],
   },
 ]
@@ -116,19 +116,19 @@ export default function Page() {
             <ul className="space-y-1.5 mb-3">
               {cat.items.map(item => (
                 <li key={item.href}>
-                  <a href={item.href} target="_blank" rel="noopener noreferrer"
+                  <Link href={item.href}
                     className="flex items-start gap-2 text-xs text-muted-foreground hover:text-primary transition-colors py-0.5">
                     <ChevronRight className="h-3 w-3 text-primary flex-shrink-0 mt-0.5" />
                     <span>{item.label}</span>
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
             {cat.count > cat.items.length && (
-              <a href={cat.baseUrl} target="_blank" rel="noopener noreferrer"
+              <Link href="/community/county-assemblies/business-plan"
                 className="text-xs text-primary hover:underline">
                 View all {cat.count} articles →
-              </a>
+              </Link>
             )}
           </div>
         ))}
