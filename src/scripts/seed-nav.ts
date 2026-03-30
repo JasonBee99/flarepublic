@@ -29,6 +29,7 @@ const NAV_GROUPS = [
     requiresAuth: false,
     requiresApproval: false,
     items: [
+      { label: 'Sample Assembly Procedures', url: '/procedures/sample-procedures',   requiresAuth: false, requiresApproval: false },
       { label: 'Assembly Procedures',       url: '/procedures/assembly',             requiresAuth: false, requiresApproval: false },
       { label: 'Reigning In Corporations',  url: '/procedures/reigning-in-corps',    requiresAuth: false, requiresApproval: false },
       { label: 'Electronic Meetings',       url: '/procedures/electronic-meetings',  requiresAuth: false, requiresApproval: false },
