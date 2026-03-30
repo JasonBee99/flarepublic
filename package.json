@@ -30,7 +30,8 @@
     "approve:all": "npx tsx src/scripts/approve-all-users.ts",
     "seed:counties": "npx tsx src/scripts/seed-counties.ts",
     "seed:test-users": "npx tsx src/scripts/seed-test-users.ts",
-    "import:wp-users": "npx tsx src/scripts/import-wp-users.ts"
+    "import:wp-users": "npx tsx src/scripts/import-wp-users.ts",
+    "clean:contacts": "npx tsx src/scripts/clean-contacts.ts"
   },
   "dependencies": {
     "@payloadcms/admin-bar": "3.80.0",
