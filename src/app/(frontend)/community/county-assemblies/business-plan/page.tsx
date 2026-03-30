@@ -39,7 +39,7 @@ const CATEGORIES = [
       { label: 'Article – Laches and Squatter Rights', href: '/community/county-assemblies/docs/laches-squatter-rights' },
       { label: 'PROPOSAL – Mergers and Military Softball', href: '/community/county-assemblies/docs/proposal-mergers-and-military-softball' },
       { label: 'Article – Signing Oaths To The National Republic For The U.S.', href: '/community/county-assemblies/docs/article-signing-oaths-to-the-national-republic-for-the-u-s' },
-      { label: 'Article – What's The Risk Of Not "Taking Tha Land?"', href: '/community/county-assemblies/docs/article-whats-the-risk-of-not-taking-tha-land' },
+      { label: `Article – What's The Risk Of Not "Taking Tha Land?"`, href: '/community/county-assemblies/docs/article-whats-the-risk-of-not-taking-tha-land' },
     ],
   },
   {
