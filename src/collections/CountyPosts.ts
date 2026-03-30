@@ -19,7 +19,7 @@ import { MediaBlock } from '../blocks/MediaBlock/config'
 
 
 // Admins see all; county members see only their county
-const readAccessWithAdmin: any = ({ req: { user } }) => {
+const readAccessWithAdmin: any = ({ req: { user } }: any) => {
   if (!user) return false
   if ((user as any).role === 'siteAdmin') return true
   const userCounty = (user as any).county
@@ -31,7 +31,7 @@ const readAccessWithAdmin: any = ({ req: { user } }) => {
 }
 
 // Create: must be logged in + approved
-const createAccess: any = ({ req: { user } }) => {
+const createAccess: any = ({ req: { user } }: any) => {
   if (!user) return false
   const u = user as any
   if (u.role === 'siteAdmin' || u.role === 'countyOrganizer') return true
@@ -39,7 +39,7 @@ const createAccess: any = ({ req: { user } }) => {
 }
 
 // Update/Delete: siteAdmin or countyOrganizer only
-const adminOnly: any = ({ req: { user } }) => {
+const adminOnly: any = ({ req: { user } }: any) => {
   if (!user) return false
   const role = (user as any).role
   return role === 'siteAdmin' || role === 'countyOrganizer'
