@@ -39,7 +39,6 @@ async function main() {
       data: { role } as any,
       overrideAccess: true,
       // @ts-ignore
-      skipValidation: true,
     })
     console.log(`  ✓ Updated: ${email} → ${role}`)
   }
