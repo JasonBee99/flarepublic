@@ -53,7 +53,7 @@ export default async function CountyPostPage({ params }: Props) {
   if (!county) return notFound()
 
   // Secondary access check
-  if (!user.role === 'siteAdmin') {
+  if (user.role !== 'siteAdmin') {
     const userCountyId = typeof user.county === 'object' ? user.county?.id : user.county
     if (userCountyId !== county.id) redirect('/member')
   }

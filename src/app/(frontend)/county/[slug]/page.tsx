@@ -65,7 +65,7 @@ export default async function CountyPage({ params, searchParams }: Props) {
   if (!county) return notFound()
 
   // Secondary access check — non-admins must belong to this county
-  if (!user.role === 'siteAdmin') {
+  if (user.role !== 'siteAdmin') {
     const userCountyId = typeof user.county === 'object' ? user.county?.id : user.county
     if (userCountyId !== county.id) {
       // Middleware should have caught this, but belt-and-suspenders
