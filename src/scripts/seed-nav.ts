@@ -41,6 +41,7 @@ const NAV_GROUPS = [
     requiresAuth: false,
     requiresApproval: false,
     items: [
+      { label: 'County Assemblies', url: '/community/county-assemblies', requiresAuth: false, requiresApproval: false },
       { label: 'EscaRosa Chapter', url: '/community/escarosa', requiresAuth: false, requiresApproval: false },
       { label: 'Forum',            url: '/forum',              requiresAuth: true,  requiresApproval: true  },
     ],
