@@ -179,6 +179,14 @@ export default async function MemberPage({
             )}
             {user.role === 'siteAdmin' && (
               <MemberCard
+                href="/site-dashboard"
+                icon="📊"
+                title="Site Dashboard"
+                description="Statewide overview — members, personality results, county health, approval queue."
+              />
+            )}
+            {user.role === 'siteAdmin' && (
+              <MemberCard
                 href="/county-dashboards"
                 icon="🗂️"
                 title="County Dashboards"

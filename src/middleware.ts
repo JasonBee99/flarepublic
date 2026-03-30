@@ -8,7 +8,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export const config = {
-  matcher: ['/forum/:path*', '/member/:path*', '/county/:path*'],
+  matcher: ['/forum/:path*', '/member/:path*', '/county/:path*', '/site-dashboard/:path*', '/site-dashboard'],
 }
 
 async function getUser(token: string, baseUrl: string) {

@@ -60,6 +60,25 @@ const BeforeDashboard: React.FC = () => {
           My Area
         </a>
         <a
+          href="/site-dashboard"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.4rem',
+            padding: '0.5rem 1rem',
+            background: 'var(--theme-elevation-150)',
+            color: 'var(--theme-text)',
+            borderRadius: '0.375rem',
+            fontWeight: 600,
+            fontSize: '0.85rem',
+            textDecoration: 'none',
+          }}
+        >
+          Site Dashboard
+        </a>
+        <a
           href="/county-dashboards"
           target="_blank"
           rel="noopener noreferrer"
