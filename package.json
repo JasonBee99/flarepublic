@@ -32,7 +32,8 @@
     "seed:test-users": "npx tsx src/scripts/seed-test-users.ts",
     "import:wp-users": "npx tsx src/scripts/import-wp-users.ts",
     "clean:contacts": "npx tsx src/scripts/clean-contacts.ts",
-    "import:docs": "npx tsx src/scripts/import-docs.ts"
+    "import:docs": "npx tsx src/scripts/import-docs.ts",
+    "clean:docs": "npx tsx src/scripts/clean-imported-docs.ts"
   },
   "dependencies": {
     "@payloadcms/admin-bar": "3.80.0",
