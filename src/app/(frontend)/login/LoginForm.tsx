@@ -36,6 +36,12 @@ function LoginFormInner() {
         return
       }
 
+      // Check if this is an imported user who must reset their password
+      if (json?.user?.mustResetPassword) {
+        router.push('/reset-password?required=1')
+        return
+      }
+
       const redirectTo = searchParams.get('redirect') ?? '/member'
       router.push(redirectTo)
       router.refresh()

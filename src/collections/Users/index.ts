@@ -69,6 +69,23 @@ export const Users: CollectionConfig = {
       },
     },
     {
+      name: 'mustResetPassword',
+      type: 'checkbox',
+      defaultValue: false,
+      admin: {
+        position: 'sidebar',
+        description: 'If checked, user will be prompted to reset password on next login.',
+      },
+    },
+    {
+      name: 'importedFrom',
+      type: 'text',
+      admin: {
+        position: 'sidebar',
+        description: 'Source of import (e.g. wordpress-2024)',
+      },
+    },
+    {
       name: 'contactInfo',
       type: 'group',
       label: 'Contact Information',

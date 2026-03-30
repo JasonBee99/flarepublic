@@ -29,7 +29,8 @@
     "migrate:roles": "npx tsx src/scripts/migrate-roles.ts",
     "approve:all": "npx tsx src/scripts/approve-all-users.ts",
     "seed:counties": "npx tsx src/scripts/seed-counties.ts",
-    "seed:test-users": "npx tsx src/scripts/seed-test-users.ts"
+    "seed:test-users": "npx tsx src/scripts/seed-test-users.ts",
+    "import:wp-users": "npx tsx src/scripts/import-wp-users.ts"
   },
   "dependencies": {
     "@payloadcms/admin-bar": "3.80.0",
