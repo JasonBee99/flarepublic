@@ -5,7 +5,7 @@
 import type { CollectionConfig, Access } from 'payload'
 import { authenticated } from '../access/authenticated'
 
-const readAccess: Access = ({ req: { user } }) => {
+const readAccess: any = ({ req: { user } }) => {
   if (!user) return false
   const role = (user as any).role
   if (role === 'siteAdmin') return true

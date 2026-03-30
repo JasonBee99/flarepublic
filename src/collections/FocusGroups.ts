@@ -5,7 +5,7 @@
 import type { CollectionConfig, Access } from 'payload'
 import { authenticated } from '../access/authenticated'
 
-const readAccess: Access = ({ req: { user } }) => {
+const readAccess: any = ({ req: { user } }) => {
   if (!user) return false
   const role = (user as any).role
   if (role === 'siteAdmin') return true
@@ -17,7 +17,7 @@ const readAccess: Access = ({ req: { user } }) => {
   return { county: { equals: countyId } }
 }
 
-const writeAccess: Access = ({ req: { user } }) => {
+const writeAccess: any = ({ req: { user } }) => {
   if (!user) return false
   const role = (user as any).role
   return role === 'countyOrganizer' || role === 'siteAdmin'
