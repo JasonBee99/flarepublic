@@ -183,7 +183,7 @@ async function main() {
   for (const name of catNames) {
     const existing = await payload.find({
       collection: 'document-categories',
-      where: { name: { equals: name } },
+      where: { title: { equals: name } },
       limit: 1,
       overrideAccess: true,
     })
@@ -193,7 +193,7 @@ async function main() {
     } else {
       const created = await payload.create({
         collection: 'document-categories',
-        data: { name } as any,
+        data: { title: name } as any,
         overrideAccess: true,
       })
       catMap[name] = created.id as string
@@ -205,7 +205,7 @@ async function main() {
   let webFileTypeId: string
   const ftExisting = await payload.find({
     collection: 'file-types',
-    where: { name: { equals: 'Web Article' } },
+    where: { label: { equals: 'Web Article' } },
     limit: 1,
     overrideAccess: true,
   })
@@ -214,7 +214,7 @@ async function main() {
   } else {
     const ft = await payload.create({
       collection: 'file-types',
-      data: { name: 'Web Article', extension: 'html' } as any,
+      data: { label: 'Web Article', value: 'web-article' } as any,
       overrideAccess: true,
     })
     webFileTypeId = ft.id as string
