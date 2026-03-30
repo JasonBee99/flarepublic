@@ -68,6 +68,31 @@ export const Users: CollectionConfig = {
         description: 'Internal admin notes about this member',
       },
     },
+    {
+      name: 'contactInfo',
+      type: 'group',
+      label: 'Contact Information',
+      admin: {
+        description: 'Member-provided contact details. Visible to County Organizers and Site Admins.',
+      },
+      fields: [
+        {
+          name: 'phone',
+          type: 'text',
+          label: 'Phone Number',
+        },
+        {
+          name: 'address',
+          type: 'text',
+          label: 'Address',
+        },
+        {
+          name: 'secondaryEmail',
+          type: 'email',
+          label: 'Secondary Email',
+        },
+      ],
+    },
   ],
   timestamps: true,
 }

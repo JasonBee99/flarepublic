@@ -133,6 +133,7 @@ export default async function CountyOrganizerDashboardPage({ params }: Props) {
     personality: personalityByUser[m.id] ?? null,
     lessonsCompleted: progressCountByUser[m.id] ?? 0,
     totalLessons,
+    contactInfo: m.contactInfo ?? null,
   }))
 
   return (

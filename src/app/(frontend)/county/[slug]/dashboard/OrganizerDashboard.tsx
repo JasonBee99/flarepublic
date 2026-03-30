@@ -8,6 +8,7 @@ import React, { useState, useMemo } from 'react'
 import {
   Users, Brain, BookOpen, Clock, CheckCircle2, XCircle,
   ChevronDown, ChevronUp, Search, SlidersHorizontal, Save, Check,
+  Phone, MapPin, Mail,
 } from 'lucide-react'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -33,6 +34,7 @@ interface MemberRow {
   personality: PersonalityResult | null
   lessonsCompleted: number
   totalLessons: number
+  contactInfo: { phone?: string; address?: string; secondaryEmail?: string } | null
 }
 
 interface Props {
@@ -265,6 +267,35 @@ function MemberCard({ member, expanded, onToggle }: {
                 <span className="text-muted-foreground">Email</span>
                 <span className="font-medium text-foreground truncate max-w-[160px]">{member.email}</span>
               </div>
+              {/* Contact info */}
+              {member.contactInfo && (member.contactInfo.phone || member.contactInfo.address || member.contactInfo.secondaryEmail) && (
+                <div className="pt-2 mt-2 border-t border-border space-y-1.5">
+                  {member.contactInfo.phone && (
+                    <div className="flex items-center gap-2">
+                      <Phone className="h-3 w-3 text-muted-foreground flex-shrink-0" />
+                      <span className="text-foreground">{member.contactInfo.phone}</span>
+                    </div>
+                  )}
+                  {member.contactInfo.address && (
+                    <div className="flex items-start gap-2">
+                      <MapPin className="h-3 w-3 text-muted-foreground flex-shrink-0 mt-0.5" />
+                      <span className="text-foreground">{member.contactInfo.address}</span>
+                    </div>
+                  )}
+                  {member.contactInfo.secondaryEmail && (
+                    <div className="flex items-center gap-2">
+                      <Mail className="h-3 w-3 text-muted-foreground flex-shrink-0" />
+                      <span className="text-foreground">{member.contactInfo.secondaryEmail}</span>
+                    </div>
+                  )}
+                </div>
+              )}
+              {member.contactInfo && !member.contactInfo.phone && !member.contactInfo.address && !member.contactInfo.secondaryEmail && (
+                <p className="text-muted-foreground pt-1 italic">No contact info provided.</p>
+              )}
+              {!member.contactInfo && (
+                <p className="text-muted-foreground pt-1 italic">No contact info provided.</p>
+              )}
             </div>
           </div>
 

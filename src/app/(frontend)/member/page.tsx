@@ -8,6 +8,7 @@ import Link from 'next/link'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import { PersonalityCard } from '@/components/PersonalityCard'
+import { ContactInfoCard } from '@/components/ContactInfoCard'
 
 export const metadata: Metadata = {
   title: 'Member Area | FlaRepublic',
@@ -225,6 +226,12 @@ export default async function MemberPage({
 
           {/* Personality Profile */}
           <PersonalityCard result={(learningStats as any).personalityResult ?? null} />
+
+          {/* Contact Info */}
+          <ContactInfoCard
+            userId={user.id}
+            initialData={(user as any).contactInfo ?? {}}
+          />
 
         </div>
       )}
