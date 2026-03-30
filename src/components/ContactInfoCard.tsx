@@ -27,7 +27,11 @@ export function ContactInfoCard({ userId, initialData }: Props) {
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const hasData = initialData.phone || initialData.address || initialData.secondaryEmail
+  // currentData tracks the last successfully saved values so display
+  // updates immediately after save without a full page refresh
+  const [currentData, setCurrentData] = useState<ContactInfo>(initialData)
+
+  const hasData = currentData.phone || currentData.address || currentData.secondaryEmail
 
   const save = async () => {
     setSaving(true)
@@ -50,6 +54,12 @@ export function ContactInfoCard({ userId, initialData }: Props) {
         setError(data?.errors?.[0]?.message ?? 'Failed to save. Please try again.')
         return
       }
+      const saved = {
+        phone: phone.trim() || undefined,
+        address: address.trim() || undefined,
+        secondaryEmail: secondaryEmail.trim() || undefined,
+      }
+      setCurrentData(saved)
       setSaved(true)
       setEditing(false)
       setTimeout(() => setSaved(false), 3000)
@@ -94,22 +104,22 @@ export function ContactInfoCard({ userId, initialData }: Props) {
             </p>
           ) : (
             <div className="space-y-3">
-              {initialData.phone && (
+              {currentData.phone && (
                 <div className="flex items-center gap-3 text-sm">
                   <Phone className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                  <span className="text-foreground">{initialData.phone}</span>
+                  <span className="text-foreground">{currentData.phone}</span>
                 </div>
               )}
-              {initialData.address && (
+              {currentData.address && (
                 <div className="flex items-start gap-3 text-sm">
                   <MapPin className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-0.5" />
-                  <span className="text-foreground">{initialData.address}</span>
+                  <span className="text-foreground">{currentData.address}</span>
                 </div>
               )}
-              {initialData.secondaryEmail && (
+              {currentData.secondaryEmail && (
                 <div className="flex items-center gap-3 text-sm">
                   <Mail className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                  <span className="text-foreground">{initialData.secondaryEmail}</span>
+                  <span className="text-foreground">{currentData.secondaryEmail}</span>
                 </div>
               )}
               <p className="text-xs text-muted-foreground pt-1">
