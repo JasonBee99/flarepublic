@@ -1,9 +1,5 @@
 // src/scripts/import-docs.ts
-// Scrapes all articles from www.flarepublic.us/docs/ and imports them into
-// the Payload 'documents' collection with clean article content.
-//
-// Run from the VPS: npm run import:docs
-// To clean up first: npm run clean:docs
+// Run on VPS: npm run clean:docs && npm run import:docs
 
 import 'dotenv/config'
 import { getPayload } from 'payload'
@@ -72,33 +68,27 @@ const DOCS: [string, string, string][] = [
   ['proposal-for-the-assemblies-of-the-re-inhabited-republic-for-florida-dictated-constitutional-religious-interference', 'PROPOSAL – Dictated Constitutional Religious Interference', 'Other'],
 ]
 
-// ── Extract clean article text from HTML ──────────────────────────────────────
 function extractContent(html: string): string {
-  // Cut off everything after "Share This Article" (footer/social links)
+  // The article body is reliably between the author avatar block and "Share This Article"
+  // Author avatar URL always contains "avatars/7/"
+  const avatarIdx = html.indexOf('avatars/7/')
   const shareIdx = html.indexOf('Share This Article')
-  const working = shareIdx > 0 ? html.slice(0, shareIdx) : html
 
-  // The article body follows the breadcrumb nav which ends with the page title
-  // Pattern: the sidebar ends, then breadcrumbs, then author, then content
-  // Find the LAST occurrence of a docs/ link in the sidebar, then take everything after the next </ul>
-  const lastDocLink = working.lastIndexOf('href="https://www.flarepublic.us/docs/')
-  let startIdx = 0
-  if (lastDocLink > 0) {
-    const closingUl = working.indexOf('</ul>', lastDocLink)
-    if (closingUl > 0) startIdx = closingUl + 5
+  let body: string
+  if (avatarIdx > 0 && shareIdx > avatarIdx) {
+    // Find the closing > of the avatar anchor tag, then take content until Share
+    const afterAvatar = html.indexOf('</a>', avatarIdx)
+    body = afterAvatar > 0 ? html.slice(afterAvatar + 4, shareIdx) : html.slice(avatarIdx, shareIdx)
+  } else if (shareIdx > 0) {
+    // Fallback: take everything before Share This Article, after the last sidebar </ul>
+    const lastUl = html.lastIndexOf('</ul>', shareIdx)
+    body = lastUl > 0 ? html.slice(lastUl + 5, shareIdx) : html.slice(0, shareIdx)
+  } else {
+    body = html
   }
 
-  // Also try to find the author byline and start after it
-  const authorMatch = working.search(/Jim Costa\s*\n\s*Updated on/)
-  if (authorMatch > 0 && authorMatch > startIdx) {
-    const nextNewline = working.indexOf('\n', authorMatch + 60)
-    if (nextNewline > 0) startIdx = nextNewline
-  }
-
-  const contentHtml = working.slice(startIdx)
-
-  // Strip HTML
-  let text = contentHtml
+  // Strip HTML tags
+  let text = body
     .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
     .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
     .replace(/<br\s*\/?>/gi, '\n')
@@ -108,41 +98,20 @@ function extractContent(html: string): string {
     .replace(/<hr[^>]*>/gi, '\n---\n')
     .replace(/<[^>]+>/g, '')
 
-  // Decode entities
+  // Decode HTML entities
   text = text
-    .replace(/&nbsp;/g, ' ')
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&#8211;/g, '–')
-    .replace(/&#8212;/g, '—')
-    .replace(/&#8216;|&#8217;/g, "'")
-    .replace(/&#8220;|&#8221;/g, '"')
-    .replace(/&#160;/g, ' ')
+    .replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#8211;/g, '–')
+    .replace(/&#8212;/g, '—').replace(/&#8216;|&#8217;/g, "'")
+    .replace(/&#8220;|&#8221;/g, '"').replace(/&#160;/g, ' ')
 
   // Normalize whitespace
-  text = text
+  return text
     .replace(/[ \t]+/g, ' ')
     .replace(/\n[ \t]+/g, '\n')
     .replace(/[ \t]+\n/g, '\n')
     .replace(/\n{4,}/g, '\n\n\n')
     .trim()
-
-  // Stop at footer nav content
-  const stopPhrases = [
-    'Training Links', 'Recommended Viewing', 'Current Event Coverage',
-    'Clone this Website', 'Scroll to Top', 'Florida free State',
-    'Complete Business Plan for all States\n', 'FAST TRACK County Assembly Method\n',
-    'Recently Added Documents\n',
-  ]
-  let endIdx = text.length
-  for (const phrase of stopPhrases) {
-    const idx = text.indexOf(phrase)
-    if (idx > 100 && idx < endIdx) endIdx = idx
-  }
-
-  return text.slice(0, endIdx).trim()
 }
 
 async function fetchDoc(slug: string): Promise<string> {
@@ -155,7 +124,7 @@ async function fetchDoc(slug: string): Promise<string> {
     if (!res.ok) { process.stdout.write(`[${res.status}] `); return '' }
     return extractContent(await res.text())
   } catch (e: any) {
-    process.stdout.write(`[ERR: ${e.message}] `)
+    process.stdout.write(`[ERR] `)
     return ''
   }
 }
@@ -164,8 +133,6 @@ async function main() {
   const payload = await getPayload({ config: configPromise })
   console.log('Connected\n')
 
-  // Ensure categories
-  const catMap: Record<string, string> = {}
   const catOrder: Record<string, number> = {
     'Core Documentation': 1, 'Fast Track to Assemblies': 2,
     "Why Break From Nat'l to Use the Fast Track?": 3,
@@ -174,6 +141,7 @@ async function main() {
     'Training Legal Officers': 8, 'Other': 9,
   }
 
+  const catMap: Record<string, string> = {}
   for (const name of [...new Set(DOCS.map(d => d[2]))]) {
     const ex = await payload.find({ collection: 'document-categories', where: { title: { equals: name } }, limit: 1, overrideAccess: true })
     if (ex.docs.length > 0) {
@@ -185,7 +153,6 @@ async function main() {
     }
   }
 
-  // Ensure Web Article file type
   let ftId: string
   const ftEx = await payload.find({ collection: 'file-types', where: { label: { equals: 'Web Article' } }, limit: 1, overrideAccess: true })
   if (ftEx.docs.length > 0) {
@@ -201,7 +168,7 @@ async function main() {
 
   for (const [slug, title, cat] of DOCS) {
     const ex = await payload.find({ collection: 'documents', where: { title: { equals: title } }, limit: 1, overrideAccess: true })
-    if (ex.docs.length > 0) { process.stdout.write(`  ~ ${title}\n`); skipped++; continue }
+    if (ex.docs.length > 0) { console.log(`  ~ ${title}`); skipped++; continue }
 
     process.stdout.write(`  ↓ ${slug} ... `)
     const content = await fetchDoc(slug)
@@ -210,7 +177,12 @@ async function main() {
     try {
       await payload.create({
         collection: 'documents',
-        data: { title, category: catMap[cat], fileType: ftId, externalUrl: `${BASE}/${slug}/`, content, sourceUrl: `${BASE}/${slug}/`, _status: 'published', publishedAt: new Date().toISOString() } as any,
+        data: {
+          title, category: catMap[cat], fileType: ftId,
+          externalUrl: `${BASE}/${slug}/`,
+          content, sourceUrl: `${BASE}/${slug}/`,
+          _status: 'published', publishedAt: new Date().toISOString(),
+        } as any,
         overrideAccess: true,
       })
       imported++
