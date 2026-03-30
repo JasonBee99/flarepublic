@@ -121,13 +121,25 @@ function buildName(displayName: string, firstName: string, lastName: string): st
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 async function main() {
-  const sqlPath = process.argv[2] ?? '/mnt/user-data/uploads/florida_1.sql'
+  // Accept path as argument, or look for florida_1.sql in common locations
+  const candidates = [
+    process.argv[2],
+    path.join(process.cwd(), 'florida_1.sql'),
+    path.join(process.env.HOME ?? '', 'florida_1.sql'),
+    path.join(process.env.HOME ?? '', 'Downloads', 'florida_1.sql'),
+    path.join(process.env.HOME ?? '', 'Desktop', 'florida_1.sql'),
+  ].filter(Boolean) as string[]
 
-  if (!fs.existsSync(sqlPath)) {
-    console.error(`SQL file not found: ${sqlPath}`)
-    console.error('Usage: npm run import:wp-users')
+  const sqlPath = candidates.find(p => fs.existsSync(p))
+
+  if (!sqlPath) {
+    console.error('Could not find florida_1.sql. Place it in one of these locations or pass the path as an argument:')
+    candidates.forEach(p => console.error('  ' + p))
+    console.error('\nExample: npm run import:wp-users -- /path/to/florida_1.sql')
     process.exit(1)
   }
+
+  console.log(`Using SQL file: ${sqlPath}`)
 
   console.log(`Reading SQL file: ${sqlPath}`)
   const sql = fs.readFileSync(sqlPath, 'utf8')
