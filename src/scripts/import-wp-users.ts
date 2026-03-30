@@ -100,13 +100,74 @@ function parseUserMeta(sql: string) {
   return meta
 }
 
-function detectCounty(text: string): string | null {
+function detectCountyFromText(text: string): string | null {
   if (!text) return null
   const lower = text.toLowerCase()
   for (const county of FL_COUNTIES) {
     if (lower.includes(county.toLowerCase())) return county
   }
   return null
+}
+
+// Parse forum topics/replies — map user_id → county by counting which county
+// forums/topics each user participated in most. Excludes admin (UID 2 / 7)
+// who posted in all county forums as moderators.
+const ADMIN_WP_IDS = new Set(['2', '7'])
+
+function parseForumCounties(sql: string): Record<string, string> {
+  const start = sql.indexOf('INSERT INTO `wp_wj3gfm_posts`')
+  const end = sql.indexOf(';\n\n--', start)
+  const block = sql.slice(start, end + 2)
+  const lines = block.split('\n')
+
+  const votes: Record<string, Record<string, number>> = {}
+  const topicCounty: Record<string, string> = {}
+
+  for (const line of lines) {
+    if (!line.includes("'topic'") && !line.includes("'reply'") && !line.includes("'forum'")) continue
+    const authorMatch = line.match(/^\((\d+),\s*(\d+),/)
+    if (!authorMatch) continue
+    const [, postId, authorId] = authorMatch
+    if (authorId === '0' || ADMIN_WP_IDS.has(authorId)) continue
+
+    // Detect county in the line
+    let detected: string | null = null
+    const lower = line.toLowerCase()
+    for (const county of FL_COUNTIES) {
+      if (lower.includes(county.toLowerCase())) {
+        detected = county
+        break
+      }
+    }
+
+    if (detected) {
+      if (line.includes("'topic'") || line.includes("'forum'")) {
+        topicCounty[postId] = detected
+      }
+      if (!votes[authorId]) votes[authorId] = {}
+      votes[authorId][detected] = (votes[authorId][detected] ?? 0) + 1
+    }
+
+    // For replies, try to pick up parent topic county from URL in the line
+    if (line.includes("'reply'")) {
+      const parentMatch = line.match(/,\s*(\d+),\s*'https?:\/\/[^']*(?:topic|forum)[^']+'/)
+      if (parentMatch) {
+        const parentId = parentMatch[1]
+        if (topicCounty[parentId]) {
+          if (!votes[authorId]) votes[authorId] = {}
+          votes[authorId][topicCounty[parentId]] = (votes[authorId][topicCounty[parentId]] ?? 0) + 1
+        }
+      }
+    }
+  }
+
+  // Pick best county per user
+  const result: Record<string, string> = {}
+  for (const [uid, counts] of Object.entries(votes)) {
+    const best = Object.entries(counts).sort((a, b) => b[1] - a[1])[0]
+    if (best) result[uid] = best[0]
+  }
+  return result
 }
 
 function buildName(displayName: string, firstName: string, lastName: string): string {
@@ -151,6 +212,10 @@ async function main() {
   console.log('Parsing user meta...')
   const meta = parseUserMeta(sql)
 
+  console.log('Parsing forum participation for county signals...')
+  const forumCountyByWpId = parseForumCounties(sql)
+  console.log(`  County signals from forum: ${Object.keys(forumCountyByWpId).length} users`)
+
   const payload = await getPayload({ config: configPromise })
 
   // ── Build county slug → id map ─────────────────────────────────────────────
@@ -185,13 +250,19 @@ async function main() {
     const description = userMeta['description'] ?? ''
     const name = buildName(wp.displayName, firstName, lastName)
 
-    // County detection
-    const detectedCounty = detectCounty(description)
+    // County detection — priority: bio text > forum participation
+    const bioCounty = detectCountyFromText(description)
+    const forumCounty = forumCountyByWpId[wp.wpId]
+      ? FL_COUNTIES.find(c => c === forumCountyByWpId[wp.wpId]) ?? null
+      : null
+    const detectedCounty = bioCounty ?? forumCounty ?? null
+
     let countyId: string | undefined
     if (detectedCounty) {
       const slug = COUNTY_SLUG[detectedCounty]
       countyId = slug ? countyBySlug[slug] : undefined
-      if (countyId) countyMatches.push(`${wp.email} → ${detectedCounty}`)
+      const source = bioCounty ? 'bio' : 'forum'
+      if (countyId) countyMatches.push(`${wp.email} → ${detectedCounty} (${source})`)
     }
 
     // Password handling
